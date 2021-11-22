@@ -28,6 +28,9 @@ Last piece to our puzzle will be a derivative controller. We know that derivativ
 
 Similarly K_p, K_i and K_d are (again) preset constants. 
 
+## How does it work?
+PID controller is part of something called control loop - first controller gets the information about error after that controller picks CV, the signal is sent and proper adjustments are made, then the error is measured again and so on in an infinite loop.
+
 ## Are I and D components always necesarry? - Problems that you should have in mind:
 ### When does controller with only I component create problems?
 - Mathemtatics here is used to model the real world - a world in which things have their limitations. 
@@ -59,7 +62,8 @@ Well, we found a satisfying formula that gives us the amount of CV in order to m
 - If we can't test online we can use hardware with fixed inputs and use heuristics to find parameters from the outputs of a hardware (Ziegler-Nichols, Cohen-Coon).
 - Some testing methods are dangerous and may damage the hardware (Ziegler-Nichols method uses high oscilations as input to the controller).
 - If we want to use mathematical model to find the constants, we need to create such model ourselves.
-### Picking the values ourselves - effects of increasing parameters independently
+## How to tune the controller by hand:
+### effects of increasing parameters independently
 | Parameter | Rise time | Overshoot | Settling time | Steady-state error | Stability |
 | --- | --- | --- | --- | --- | --- |
 | K_p | Decrease | Increase | Small Change | Decrease | Degrade |
@@ -67,6 +71,11 @@ Well, we found a satisfying formula that gives us the amount of CV in order to m
 | K_d | Minor change | Decrease | Decrease | No effect in theory | Improve if K_d small |
 
 ![Alt text](https://upload.wikimedia.org/wikipedia/commons/3/33/PID_Compensation_Animated.gif)
-# How to tune the controller by hand:
+## Ziegler-Nicholas method
+- Easy to calculate.
+- Guarantees stability (perhaps only in theory).
+- Outdated method - from 1940 - there exist better methods.
 
+## Nested control loops
+It is always possible to nest controll loops in order to obtain easier testing of our controllers and to allow paraller work on tuning the controllers, but in that scenario tuning is harder.
 

@@ -61,11 +61,13 @@ Well, we found a satisfying formula that gives us the amount of CV in order to m
 - If we want to use mathematical model to find the constants, we need to create such model ourselves.
 ### Picking the values ourselves
 |  Effects of increasing a parameter independently |
-| --- |
+| --- | --- | --- | --- | --- | --- |
 | Parameter | Rise time | Overshoot | Settling time | Steady-state error | Stability |
 | --- | --- | --- | --- | --- | --- |
 | K_p | Decrease | Increase | Small Change | Decrease | Degrade |
+| --- | --- | --- | --- | --- | --- |
 | K_i | Decrease | Increase | Increase | Eliminate | Degrade |
+| --- | --- | --- | --- | --- | --- |
 | K_d | Minor change | Decrease | Decrease | No effect in theory | Improve if K_d small |
 
 ![Alt text](https://upload.wikimedia.org/wikipedia/commons/3/33/PID_Compensation_Animated.gif)

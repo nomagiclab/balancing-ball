@@ -43,8 +43,10 @@ p3_id = p.addUserDebugParameter("z_roll", -3.14, 3.14, 0)
 p4_id = p.addUserDebugParameter("y_roll", -3.14, 3.14, 0)
 p5_id = p.addUserDebugParameter("x_roll", -3.14, 3.14, 0)
 
+rotation_speed_id = p.addUserDebugParameter("rotation_speed")
+
 p.changeDynamics(robot, 6, lateralFriction=0.05, spinningFriction=0.1, rollingFriction=0.1, restitution=0.95, mass=1)
-p.changeDynamics(red_ball, -1, restitution=0.6)
+p.changeDynamics(red_ball, -1, rollingFriction=0.005, restitution=0.6)
 
 p.stepSimulation()
 
@@ -85,17 +87,18 @@ while True:
         if k == p.B3G_DOWN_ARROW and (v & p.KEY_WAS_RELEASED):
             y_steering = 0
 
-
     # Rotate the paddle around the x-axis
-    p.setJointMotorControl2(robot,
-                            5,
-                            p.POSITION_CONTROL,
-                            targetPosition=x_joint_pos + x_steering * (5 * 3.14 / 180))
+    if x_steering != 0:
+        p.setJointMotorControl2(robot,
+                                5,
+                                p.POSITION_CONTROL,
+                                targetPosition=x_joint_pos + x_steering * (5 * 3.14 / 180))
 
-    p.setJointMotorControl2(robot,
-                            4,
-                            p.POSITION_CONTROL,
-                            targetPosition=y_joint_pos + y_steering * (5 * 3.14 / 180))
+    if y_steering != 0:
+        p.setJointMotorControl2(robot,
+                                4,
+                                p.POSITION_CONTROL,
+                                targetPosition=y_joint_pos + y_steering * (5 * 3.14 / 180))
 
     # step Simulation
     p.stepSimulation()

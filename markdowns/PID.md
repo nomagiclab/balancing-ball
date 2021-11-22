@@ -59,15 +59,11 @@ Well, we found a satisfying formula that gives us the amount of CV in order to m
 - If we can't test online we can use hardware with fixed inputs and use heuristics to find parameters from the outputs of a hardware (Ziegler-Nichols, Cohen-Coon).
 - Some testing methods are dangerous and may damage the hardware (Ziegler-Nichols method uses high oscilations as input to the controller).
 - If we want to use mathematical model to find the constants, we need to create such model ourselves.
-### Picking the values ourselves
-|  Effects of increasing a parameter independently |
-| --- | --- | --- | --- | --- | --- |
+### Picking the values ourselves - effects of increasing parameters independently
 | Parameter | Rise time | Overshoot | Settling time | Steady-state error | Stability |
 | --- | --- | --- | --- | --- | --- |
 | K_p | Decrease | Increase | Small Change | Decrease | Degrade |
-| --- | --- | --- | --- | --- | --- |
 | K_i | Decrease | Increase | Increase | Eliminate | Degrade |
-| --- | --- | --- | --- | --- | --- |
 | K_d | Minor change | Decrease | Decrease | No effect in theory | Improve if K_d small |
 
 ![Alt text](https://upload.wikimedia.org/wikipedia/commons/3/33/PID_Compensation_Animated.gif)

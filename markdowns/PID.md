@@ -28,7 +28,7 @@ Last piece to our puzzle will be a derivative controller. We know that derivativ
 
 Similarly K_p, K_i and K_d are (again) preset constants. 
 
-## Are I and D components always necesarry? - Some problems that you should have in mind
+## Are I and D components always necesarry? - Problems that you should have in mind:
 ### When does controller with only I component create problems?
 - Mathemtatics here is used to model the real world - a world in which things have their limitations. 
 - Consider a drone with PID controller used to control its altitude - if we hold it, the propeller will try to move faster and faster possibly destroying itself.
@@ -51,5 +51,21 @@ Similarly K_p, K_i and K_d are (again) preset constants.
 In order to use a proper controller you need to understand the problem and choose the controller accordingly.
 
 ## Is this everything? - Tuning
-Well, we found a satisfying formula that gives us the amount of CV used to minimize e, but we still don't know:
-- how to set K_p, K_i and K_d
+Well, we found a satisfying formula that gives us the amount of CV in order to minimize e, but we still don't know how to set K_p, K_i and K_d - the processes of setting those constants is called tuning. The processes depends on multiple conditions and we need to keep in mind that the values themselves will be different depending on the expected behaviour. 
+### How can we set the constants:
+- It's always possible to pick the values of K_p, K_i and K_d that we think could be working well.
+- If we are able to simulate conditions in which controller will be working, we can try to find constants in simulation and then use them in real world.
+- If it's possible to change the values of constants while controller is working, we could use binary search and test the parameters online.
+- If we can't test online we can use hardware with fixed inputs and use heuristics to find parameters from the outputs of a hardware (Ziegler-Nichols, Cohen-Coon).
+- Some testing methods are dangerous and may damage the hardware (Ziegler-Nichols method uses high oscilations as input to the controller).
+- If we want to use mathematical model to find the constants, we need to create such model ourselves.
+### Picking the values ourselves
+|  Effects of increasing a parameter independently |
+| Parameter | Rise time | Overshoot | Settling time | Steady-state error | Stability |
+| K_p | Decrease | Increase | Small Change | Decrease | Degrade |
+| K_i | Decrease | Increase | Increase | Eliminate | Degrade |
+| K_d | Minor change | Decrease | Decrease | No effect in theory | Improve if K_d small |
+![Alt text](https://upload.wikimedia.org/wikipedia/commons/3/33/PID_Compensation_Animated.gif)
+# How to tune the controller by hand:
+
+

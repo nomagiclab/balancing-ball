@@ -6,8 +6,10 @@ class Button:
         self.id = buttonId
         self.counter = 0
 
+    # returns True if button was clicked since the last time
+    # wasClicked returned True.
     def wasClicked(self) -> bool:
-        return p.readUserDebugParameter(self.id) > self.counter
-
-    def consumeClick(self):
-        self.counter = p.readUserDebugParameter(self.id)
+        if p.readUserDebugParameter(self.id) > self.counter:
+            self.counter = p.readUserDebugParameter(self.id)
+            return True
+        return False

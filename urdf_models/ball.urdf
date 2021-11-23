@@ -1,25 +1,22 @@
 <robot name="simple_ball">
   <link name="ball">
     <inertial>
-      <mass value="1.0" />
-      <!-- center of mass (com) is defined w.r.t. link local coordinate system -->
-      <!-- give a little y-offset to make the top precess -->
-      <origin xyz="0 0 0" /> 
-      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      <mass value="0.0027" />
+      <!-- \frac{2}{3} * 0.04 * 0.04 * 0.0027 = 0.00000288 -->
+      <!-- Maybe extract constants to a separate file. -->
+      <inertia  ixx="0.00000288" ixy="0.0"  ixz="0.0"  iyy="0.00000288"  iyz="0.0"  izz="0.00000288" />
     </inertial>
     <visual>
-      <!-- visual origin is defined w.r.t. link local coordinate system -->
-      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.04"/>
       </geometry>
     </visual>
     <collision>
-      <!-- collision origin is defined w.r.t. link local coordinate system -->
-      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.04"/>
       </geometry>
+      <!-- Probably is ignored by pybullet or I used it incorrectly. -->
+      <!-- <contact_coefficients mu = "0.2" kp = "200"/> -->
     </collision>
   </link>
 </robot>

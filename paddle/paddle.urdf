@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<robot name="robot">
+    <link name="base_link">
+        <inertial>
+            <mass value="0"/>
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="center_z" type="prismatic">
+        <parent link="base_link"/>
+        <child link="y_control"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="-0.1" upper="5.0" velocity="0.2"/>
+    </joint>
+    <link name="y_control">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="center_y" type="prismatic">
+        <parent link="y_control"/>
+        <child link="x_control"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-0.1" upper="1.1" velocity="0.2"/>
+    </joint>
+    <link name="x_control">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="center_x" type="prismatic">
+        <parent link="x_control"/>
+        <child link="z_roll_control"/>
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="-1.1" upper="1" velocity="0.2"/>
+    </joint>
+    <link name="z_roll_control">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="z_gripper_roll" type="revolute">
+        <parent link="z_roll_control"/>
+        <child link="y_roll_control"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
+    </joint>
+    <link name="y_roll_control">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="y_gripper_roll" type="revolute">
+        <parent link="y_roll_control"/>
+        <child link="x_roll_control"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
+    </joint>
+    <link name="x_roll_control">
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                iyx = "0" iyy = "0" iyz = "0"
+                izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+    <joint name="x_gripper_roll" type="revolute">
+        <parent link="x_roll_control"/>
+        <child link="handle"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
+    </joint>
+    <link name="handle">
+        <inertial>
+            <mass value="0"/>
+            <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <box size="0.1 0.025 0.032"/>
+            </geometry>
+            <material name="a">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.1 0.025 0.032"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="pad">
+        <visual>
+            <geometry>
+                <cylinder length="0.01" radius="0.147"/>
+            </geometry>
+            <material name="b">
+                <color rgba="1 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.01" radius="0.147"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="paddle_to_handle" type="fixed">
+        <parent link="handle"/>
+        <child link="pad"/>
+        <origin xyz="0.18 -0.0125 0"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+</robot>

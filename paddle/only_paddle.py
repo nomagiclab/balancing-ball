@@ -1,4 +1,5 @@
 import typing
+
 from paddle.abc_paddle import ABCPaddle
 
 
@@ -7,8 +8,8 @@ class OnlyPaddle(ABCPaddle):
 
     # The following are the paddle important joints ids.
     # These are hard coded values, so always make sure to check these after changing paddle urdf model.
-    move_axis_joints = {'x': 2, 'y': 1, 'z': 0}
-    rotate_axis_joints = {'x': 5, 'y': 4, 'z': 3}
+    MOVE_AXIS_JOINTS = {'x': 2, 'y': 1, 'z': 0}
+    ROTATE_AXIS_JOINTS = {'x': 5, 'y': 4, 'z': 3}
     joint_controllers = typing.List[int]
 
     def __init__(self, pybullet_client):
@@ -18,6 +19,9 @@ class OnlyPaddle(ABCPaddle):
 
         # Set the friction and restitution of the paddle.
         self.pybullet_client.changeDynamics(self.robot_id, 6, lateralFriction=0.01, restitution=0.7)
+
+    def reset_position(self):
+        self.pybullet_client.resetBasePositionAndOrientation(self.robot_id, [0, 0, 0], [0, 0, 0, 1])
 
     def create_joint_controllers(self):
         self.joint_controllers = []
@@ -38,15 +42,60 @@ class OnlyPaddle(ABCPaddle):
                                                            self.joint_controllers[i]))
 
     def rotate_around_axis(self, axis, angle):
-        joint_pos = self.pybullet_client.getJointState(self.robot_id, self.rotate_axis_joints[axis])[0]
+        joint_pos = self.pybullet_client.getJointState(self.robot_id, self.ROTATE_AXIS_JOINTS[axis])[0]
 
         self.pybullet_client.setJointMotorControl2(self.robot_id,
-                                                   self.rotate_axis_joints[axis],
+                                                   self.ROTATE_AXIS_JOINTS[axis],
                                                    self.pybullet_client.POSITION_CONTROL,
                                                    targetPosition=joint_pos + angle * 3.14 / 180)
 
-    def move_by_vector(self, v):
-        pass
+    def move_by_vector(self, v, vel=1):
+        axes = ['x', 'y', 'z']
 
-    def move_to_position(self, p):
-        pass
+        for i in range(3):
+            joint_pos = self.pybullet_client.getJointState(self.robot_id, self.MOVE_AXIS_JOINTS[axes[i]])[0]
+
+            self.pybullet_client.setJointMotorControl2(self.robot_id,
+                                                       self.MOVE_AXIS_JOINTS[axes[i]],
+                                                       self.pybullet_client.POSITION_CONTROL,
+                                                       targetPosition=joint_pos + v[i],
+                                                       maxVelocity=vel)
+
+    def move_to_position(self, p, vel=1):
+        axes = ['x', 'y', 'z']
+
+        for i in range(3):
+            self.pybullet_client.setJointMotorControl2(self.robot_id,
+                                                       self.MOVE_AXIS_JOINTS[axes[i]],
+                                                       self.pybullet_client.POSITION_CONTROL,
+                                                       targetPosition=p[i],
+                                                       maxVelocity=vel)
+
+    def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):
+        p = self.pybullet_client
+        keys = p.getKeyboardEvents()
+
+        # handle keyboard events
+        for k, v in keys.items():
+            if k == p.B3G_RIGHT_ARROW and (v & p.KEY_WAS_TRIGGERED):
+                x_steering[0] = -1
+            if k == p.B3G_RIGHT_ARROW and (v & p.KEY_WAS_RELEASED):
+                x_steering[0] = 0
+
+            if k == p.B3G_LEFT_ARROW and (v & p.KEY_WAS_TRIGGERED):
+                x_steering[0] = 1
+            if k == p.B3G_LEFT_ARROW and (v & p.KEY_WAS_RELEASED):
+                x_steering[0] = 0
+
+            if k == p.B3G_UP_ARROW and (v & p.KEY_WAS_TRIGGERED):
+                y_steering[0] = 1
+            if k == p.B3G_UP_ARROW and (v & p.KEY_WAS_RELEASED):
+                y_steering[0] = 0
+
+            if k == p.B3G_DOWN_ARROW and (v & p.KEY_WAS_TRIGGERED):
+                y_steering[0] = -1
+            if k == p.B3G_DOWN_ARROW and (v & p.KEY_WAS_RELEASED):
+                y_steering[0] = 0
+
+        self.rotate_around_axis('x', x_steering[0] * rotation_speed)
+        self.rotate_around_axis('y', y_steering[0] * rotation_speed)

@@ -24,7 +24,7 @@ class ABCPaddle(ABC):
     def move_to_position(self, p):
         pass
 
-    #TODO: Nie wiem czy to w ogóle będzie potrzebne?
+    #TODO: Will this be even useful someday?
     '''
     @abstractmethod
     def create_gui_controlls(self):

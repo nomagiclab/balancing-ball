@@ -33,3 +33,9 @@ def load_assets_only_paddle(p):
         print(p.getJointInfo(paddle.robot_id, joint))
 
     return [ball, paddle]
+
+def throw_ball(p, ball, paddle, ball_velocity):
+    # Get the padddle's center position.
+    paddle_pos = paddle.get_center_position()
+
+    # Throw the ball.

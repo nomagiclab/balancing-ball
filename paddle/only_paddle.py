@@ -71,6 +71,11 @@ class OnlyPaddle(ABCPaddle):
                                                        targetPosition=p[i],
                                                        maxVelocity=vel)
 
+    # Return current position of the paddle center. List of coordinates: [x, y, z].
+    def get_center_position(self):
+        return [self.pybullet_client.getJointState(self.robot_id, self.MOVE_AXIS_JOINTS[axe])[0]
+                for axe in ['x', 'y', 'z']]
+
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):
         p = self.pybullet_client
         keys = p.getKeyboardEvents()

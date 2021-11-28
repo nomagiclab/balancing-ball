@@ -25,11 +25,12 @@ else:
     paddle.create_joint_controllers()
 
 reset_ball_button = p.addUserDebugParameter("Reset ball position", 1, 0, 0)
+force_ball_button = p.addUserDebugParameter("Apply force to the ball", 1, 0, 0)
 
 p.stepSimulation()
 
 reset_ball_val = 0
-reset_paddle_val = 0
+force_ball_val = 0
 
 while True:
     if keyboard_mode:
@@ -41,6 +42,10 @@ while True:
     if p.readUserDebugParameter(reset_ball_button) > reset_ball_val:
         reset_ball_val = p.readUserDebugParameter(reset_ball_button)
         p.resetBasePositionAndOrientation(ball, [0.15, 0, 1], [0, 0, 0, 1])
+
+    if p.readUserDebugParameter(force_ball_button) > force_ball_val:
+        force_ball_val = p.readUserDebugParameter(force_ball_button)
+        p.applyExternalForce(ball, -1, [5, 0, 6], [0, 0, 0], p.WORLD_FRAME)
 
     p.stepSimulation()
 

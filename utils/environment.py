@@ -1,11 +1,11 @@
 import pybullet_data
-from paddle.only_paddle import OnlyPaddle
+from paddle.only_paddle import Paddle
 
-MAX_BALL_HEIGHT = 2
 G = 9.81
-DEFAULT_ORIENTATION = [0, 0, 0, 1]
+MAX_BALL_HEIGHT = 2
+BALL_DEFAULT_ORIENTATION = [0, 0, 0, 1]
+BALL_DEFAULT_POSITION = [0.15, 0, 1]
 BASE_PLANE_POSITION = [0, 0, -0.1]
-DEFAULT_BALL_POSITION = [0.15, 0, 1]
 
 
 def init_environment(p):
@@ -31,7 +31,7 @@ def load_plane(p):
 
 # Loads ball urdf and sets dynamics parameters.
 def load_ball(p):
-    ballId = p.loadURDF("urdf_models/ball.urdf", basePosition=DEFAULT_BALL_POSITION)
+    ballId = p.loadURDF("urdf_models/ball.urdf", basePosition=BALL_DEFAULT_POSITION)
 
     # TODO Find exact values of this coefficients.
     # Perhaps constants should be aggregated in a better way.
@@ -42,7 +42,7 @@ def load_ball(p):
 
 def load_paddle(p):
     # load our paddle
-    paddle = OnlyPaddle(p)
+    paddle = Paddle(p)
 
     # display info about robot joints
     numJoints = p.getNumJoints(paddle.robot_id)

@@ -3,7 +3,7 @@ import typing
 from paddle.abc_paddle import ABCPaddle
 
 
-class OnlyPaddle(ABCPaddle):
+class Paddle(ABCPaddle):
     urdf_model = 'paddle/paddle.urdf'
 
     # The following are the paddle important joints ids.

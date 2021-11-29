@@ -2,7 +2,7 @@
 import pybullet as p
 import time
 import argparse
-from utils.environment import init_env_and_load_assets, DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, DEFAULT_BALL_POSITION
+from utils.environment import init_env_and_load_assets, BALL_DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION
 from utils.button import Button
 from utils.command_wrapper import CommandWrapper
 
@@ -30,7 +30,7 @@ else:
     paddle.create_joint_controllers()
 
 # Ball buttons
-setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, DEFAULT_BALL_POSITION[0])
+setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[0])
 resetBallButton = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
 
 
@@ -40,12 +40,12 @@ while True:
     else:
         paddle.read_and_update_joint_position()
 
-    # Check if the reset button was clicked, and reset the ball eventually.
+    # Reset ball position if button was clicked.
     if resetBallButton.wasClicked():
         height = p.readUserDebugParameter(setBallInitHeight)
         # Also sets velocity to 0.
-        p.resetBasePositionAndOrientation(ballId, [DEFAULT_BALL_POSITION[0], DEFAULT_BALL_POSITION[1], height],
-                                          DEFAULT_ORIENTATION)
+        p.resetBasePositionAndOrientation(ballId, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
+                                          BALL_DEFAULT_ORIENTATION)
 
     p.stepSimulation()
 

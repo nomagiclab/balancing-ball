@@ -49,12 +49,7 @@ def sub_vertices(v1, v2):
     assert len(v1) == len(v2)
     return tuple(map(operator.sub, v1, v2))
 
-def square_norm(v1):
-    r = 0
-    for v in v1:
-        r += v * v
-    return r
-
+# Finds recommended force needed to let ball travel some distant.
 def scale_vector(v):
     assert len(v) == 3
     return (4.5 * v[0], 4.5 * v[1], 5 * v[2] + 7)

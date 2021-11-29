@@ -44,6 +44,7 @@ while True:
         reset_ball_val = p.readUserDebugParameter(reset_ball_button)
         p.resetBasePositionAndOrientation(ball, [0.15, 0, 1], [0, 0, 0, 1])
 
+    # Check if the force button was clicked, and throw the ball eventually.
     if p.readUserDebugParameter(force_ball_button) > force_ball_val:
         force_ball_val = p.readUserDebugParameter(force_ball_button)
         curr_ball = p.getBasePositionAndOrientation(ball)[0]

@@ -3,6 +3,7 @@ import pybullet as p
 import time
 import argparse
 from utils import load_assets_only_paddle
+import utils
 
 parser = argparse.ArgumentParser(description='Mode manager')
 
@@ -45,7 +46,11 @@ while True:
 
     if p.readUserDebugParameter(force_ball_button) > force_ball_val:
         force_ball_val = p.readUserDebugParameter(force_ball_button)
-        p.applyExternalForce(ball, -1, [5, 0, 6], [0, 0, 0], p.WORLD_FRAME)
+        curr_ball = p.getBasePositionAndOrientation(ball)[0]
+        curr_paddle = paddle.get_center_position()
+        vec = utils.sub_vertices(curr_paddle, curr_ball)
+        vec = utils.scale_vector(vec)
+        p.applyExternalForce(ball, -1, vec, [0, 0, 0], p.WORLD_FRAME)
 
     p.stepSimulation()
 

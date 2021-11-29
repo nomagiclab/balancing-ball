@@ -1,5 +1,6 @@
 import pybullet_data
 from paddle.only_paddle import OnlyPaddle
+import operator
 
 
 def load_assets_only_paddle(p):
@@ -39,3 +40,21 @@ def throw_ball(p, ball, paddle, ball_velocity):
     paddle_pos = paddle.get_center_position()
 
     # Throw the ball.
+
+def add_vertices(v1, v2): 
+    assert len(v1) == len(v2)
+    return tuple(map(operator.add, v1, v2))
+
+def sub_vertices(v1, v2):
+    assert len(v1) == len(v2)
+    return tuple(map(operator.sub, v1, v2))
+
+def square_norm(v1):
+    r = 0
+    for v in v1:
+        r += v * v
+    return r
+
+def scale_vector(v):
+    assert len(v) == 3
+    return (4.5 * v[0], 4.5 * v[1], 5 * v[2] + 7)

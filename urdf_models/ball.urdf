@@ -1,0 +1,22 @@
+<robot name="simple_ball">
+  <link name="ball">
+    <inertial>
+      <mass value="0.0027" />
+      <!-- \frac{2}{3} * 0.02 * 0.02 * 0.0027 = 0.00000288 -->
+      <!-- Maybe extract constants to a separate file. -->
+      <inertia  ixx="7.2e-7" ixy="0.0"  ixz="0.0"  iyy="7.2e-7"  iyz="0.0"  izz="7.2e-7" />
+    </inertial>
+    <visual>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <!-- Probably is ignored by pybullet or I used it incorrectly. -->
+      <!-- <contact_coefficients mu = "0.2" kp = "200"/> -->
+    </collision>
+  </link>
+</robot>

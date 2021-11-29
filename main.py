@@ -2,19 +2,24 @@
 import pybullet as p
 import time
 import argparse
-from utils import load_assets_only_paddle
+from utils.environment import init_env_and_load_assets, BALL_DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION
+from utils.button import Button
+from utils.command_wrapper import CommandWrapper
 
-parser = argparse.ArgumentParser(description='Mode manager')
 
-parser.add_argument('--mode', dest='mode', type=str, help="Steering mode.")
-args = parser.parse_args()
+def get_mode():
+    parser = argparse.ArgumentParser(description='Mode manager')
 
-keyboard_mode = args.mode == 'keyboard'
+    parser.add_argument('--mode', dest='mode', type=str, help="Steering mode.")
+    args = parser.parse_args()
 
-# start the simulation with a GUI (p.DIRECT is without GUI)
-p.connect(p.GUI)
+    return args.mode == 'keyboard'
 
-ball, paddle = load_assets_only_paddle(p)
+
+keyboard_mode = get_mode()
+
+ballId, paddle = init_env_and_load_assets(p)
+
 
 if keyboard_mode:
     # add rotation speed controller
@@ -24,12 +29,10 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
-reset_ball_button = p.addUserDebugParameter("Reset ball position", 1, 0, 0)
+# Ball buttons
+setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[2])
+resetBallButton = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
 
-p.stepSimulation()
-
-reset_ball_val = 0
-reset_paddle_val = 0
 
 while True:
     if keyboard_mode:
@@ -37,10 +40,12 @@ while True:
     else:
         paddle.read_and_update_joint_position()
 
-    # Check if the reset button was clicked, and reset the ball eventually.
-    if p.readUserDebugParameter(reset_ball_button) > reset_ball_val:
-        reset_ball_val = p.readUserDebugParameter(reset_ball_button)
-        p.resetBasePositionAndOrientation(ball, [0.15, 0, 1], [0, 0, 0, 1])
+    # Reset ball position if button was clicked.
+    if resetBallButton.wasClicked():
+        height = p.readUserDebugParameter(setBallInitHeight)
+        # Also sets velocity to 0.
+        p.resetBasePositionAndOrientation(ballId, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
+                                          BALL_DEFAULT_ORIENTATION)
 
     p.stepSimulation()
 

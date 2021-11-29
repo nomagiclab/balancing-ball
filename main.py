@@ -3,6 +3,13 @@ import pybullet as p
 import time
 import argparse
 from utils import load_assets_only_paddle
+from utils.button import Button
+from utils.command_wrapper import CommandWrapper
+
+DEFAULT_BALL_HEIGHT = 1
+MAX_BALL_HEIGHT = 2
+G = 9.81
+DEFAULT_ORIENTATION = p.getQuaternionFromEuler([0, 0, 0])
 
 parser = argparse.ArgumentParser(description='Mode manager')
 
@@ -14,7 +21,7 @@ keyboard_mode = args.mode == 'keyboard'
 # start the simulation with a GUI (p.DIRECT is without GUI)
 p.connect(p.GUI)
 
-ball, paddle = load_assets_only_paddle(p)
+ballId, paddle = load_assets_only_paddle(p)
 
 if keyboard_mode:
     # add rotation speed controller
@@ -24,7 +31,8 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
-reset_ball_button = p.addUserDebugParameter("Reset ball position", 1, 0, 0)
+setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, DEFAULT_BALL_HEIGHT)
+resetBallButton = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
 
 p.stepSimulation()
 
@@ -38,9 +46,10 @@ while True:
         paddle.read_and_update_joint_position()
 
     # Check if the reset button was clicked, and reset the ball eventually.
-    if p.readUserDebugParameter(reset_ball_button) > reset_ball_val:
-        reset_ball_val = p.readUserDebugParameter(reset_ball_button)
-        p.resetBasePositionAndOrientation(ball, [0.15, 0, 1], [0, 0, 0, 1])
+    if resetBallButton.wasClicked():
+        height = p.readUserDebugParameter(setBallInitHeight)
+        # Also sets velocity to 0.
+        p.resetBasePositionAndOrientation(ballId, [0, 0, height], DEFAULT_ORIENTATION)
 
     p.stepSimulation()
 

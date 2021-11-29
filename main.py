@@ -30,7 +30,7 @@ else:
     paddle.create_joint_controllers()
 
 # Ball buttons
-setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[0])
+setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[2])
 resetBallButton = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
 
 

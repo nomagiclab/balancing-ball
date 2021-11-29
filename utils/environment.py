@@ -19,6 +19,20 @@ def init_environment(p):
     pass
 
 
+def init_wind_controllers(p):
+    wind_x_controller = p.addUserDebugParameter("Adjust the wind (x - axis)", -G, G, 0)
+    wind_y_controller = p.addUserDebugParameter("Adjust the wind (y - axis)", -G, G, 0)
+
+    return wind_x_controller, wind_y_controller
+
+
+def update_wind_controllers(p, wind_x_controller, wind_y_controller):
+    wind_x = p.readUserDebugParameter(wind_x_controller)
+    wind_y = p.readUserDebugParameter(wind_y_controller)
+
+    p.setGravity(wind_x, wind_y, -G)
+
+
 def load_plane(p):
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
@@ -54,7 +68,8 @@ def load_paddle(p):
 
 def init_env_and_load_assets(p):
     init_environment(p)
+    wind_controllers = init_wind_controllers(p)
     load_plane(p)
     ball = load_ball(p)
     paddle = load_paddle(p)
-    return ball, paddle
+    return ball, paddle, wind_controllers

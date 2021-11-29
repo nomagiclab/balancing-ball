@@ -2,9 +2,9 @@
 import pybullet as p
 import time
 import argparse
-from utils.environment import init_env_and_load_assets, BALL_DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION
+from utils.environment import init_env_and_load_assets, update_wind_controllers, \
+    BALL_DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION
 from utils.button import Button
-from utils.command_wrapper import CommandWrapper
 
 
 def get_mode():
@@ -18,7 +18,7 @@ def get_mode():
 
 keyboard_mode = get_mode()
 
-ballId, paddle = init_env_and_load_assets(p)
+ballId, paddle, wind_controllers = init_env_and_load_assets(p)
 
 
 if keyboard_mode:
@@ -46,6 +46,8 @@ while True:
         # Also sets velocity to 0.
         p.resetBasePositionAndOrientation(ballId, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
                                           BALL_DEFAULT_ORIENTATION)
+
+    update_wind_controllers(p, *wind_controllers)
 
     p.stepSimulation()
 

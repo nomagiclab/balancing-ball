@@ -1,5 +1,5 @@
 import pybullet_data
-from paddle.only_paddle import Paddle
+from paddle.paddle import Paddle
 
 G = 9.81
 MAX_BALL_HEIGHT = 2
@@ -36,7 +36,7 @@ def load_ball(p):
     # TODO Find exact values of this coefficients.
     # Perhaps constants should be aggregated in a better way.
     # Some of them are in the urdf file, some are passed in the function below. It might be confusing.
-    p.changeDynamics(ballId, -1, restitution=0.7, lateralFriction=0.2, spinningFriction=0.2, rollingFriction=0.02)
+    p.changeDynamics(ballId, -1, restitution=0.7, lateralFriction=0.2, spinningFriction=0.2, rollingFriction=0.002)
     return ballId
 
 

@@ -1,18 +1,18 @@
 
 # This is just a helper class to make debugging easier.
 class CommandWrapper:
-    def getDynamicsInfo(commandResult):
+    def get_dynamics_info(command_result):
         ret = dict()
-        ret["mass"] = commandResult[0]
-        ret["lateral_friction"] = commandResult[1]
-        ret["local_inertia_diagonal"] = commandResult[2]
-        ret["local-inertial_pos"] = commandResult[3]
-        ret["local_inertia_orn"] = commandResult[4]
-        ret["restitution"] = commandResult[5]
-        ret["rolling_friction"] = commandResult[6]
-        ret["spinning_friction"] = commandResult[7]
-        ret["contact_damping"] = commandResult[8]
-        ret["contact_stiffness"] = commandResult[9]
-        ret["body_type"] = commandResult[10]
-        ret["collision_margin"] = commandResult[11]
+        ret["mass"] = command_result[0]
+        ret["lateral_friction"] = command_result[1]
+        ret["local_inertia_diagonal"] = command_result[2]
+        ret["local-inertial_pos"] = command_result[3]
+        ret["local_inertia_orn"] = command_result[4]
+        ret["restitution"] = command_result[5]
+        ret["rolling_friction"] = command_result[6]
+        ret["spinning_friction"] = command_result[7]
+        ret["contact_damping"] = command_result[8]
+        ret["contact_stiffness"] = command_result[9]
+        ret["body_type"] = command_result[10]
+        ret["collision_margin"] = command_result[11]
         return ret

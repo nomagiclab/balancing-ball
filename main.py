@@ -18,7 +18,7 @@ def get_mode():
 
 keyboard_mode = get_mode()
 
-ballId, paddle, wind_controllers = init_env_and_load_assets(p)
+ball_id, paddle, wind_controllers = init_env_and_load_assets(p)
 
 
 if keyboard_mode:
@@ -30,8 +30,8 @@ else:
     paddle.create_joint_controllers()
 
 # Ball buttons
-setBallInitHeight = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[2])
-resetBallButton = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
+set_ball_init_height = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[2])
+reset_ball_button = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
 
 
 while True:
@@ -41,10 +41,10 @@ while True:
         paddle.read_and_update_joint_position()
 
     # Reset ball position if button was clicked.
-    if resetBallButton.wasClicked():
-        height = p.readUserDebugParameter(setBallInitHeight)
+    if reset_ball_button.was_clicked():
+        height = p.readUserDebugParameter(set_ball_init_height)
         # Also sets velocity to 0.
-        p.resetBasePositionAndOrientation(ballId, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
+        p.resetBasePositionAndOrientation(ball_id, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
                                           BALL_DEFAULT_ORIENTATION)
 
     update_wind_controllers(p, *wind_controllers)

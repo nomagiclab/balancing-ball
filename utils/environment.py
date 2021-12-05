@@ -45,13 +45,13 @@ def load_plane(p):
 
 # Loads ball urdf and sets dynamics parameters.
 def load_ball(p):
-    ballId = p.loadURDF("urdf_models/ball.urdf", basePosition=BALL_DEFAULT_POSITION)
+    ball_id = p.loadURDF("urdf_models/ball.urdf", basePosition=BALL_DEFAULT_POSITION)
 
     # TODO Find exact values of this coefficients.
     # Perhaps constants should be aggregated in a better way.
     # Some of them are in the urdf file, some are passed in the function below. It might be confusing.
-    p.changeDynamics(ballId, -1, restitution=0.7, lateralFriction=0.2, spinningFriction=0.2, rollingFriction=0.002)
-    return ballId
+    p.changeDynamics(ball_id, -1, restitution=0.7, lateralFriction=0.2, spinningFriction=0.2, rollingFriction=0.002)
+    return ball_id
 
 
 def load_paddle(p):
@@ -59,8 +59,8 @@ def load_paddle(p):
     paddle = Paddle(p)
 
     # display info about robot joints
-    numJoints = p.getNumJoints(paddle.robot_id)
-    for joint in range(numJoints):
+    num_joints = p.getNumJoints(paddle.robot_id)
+    for joint in range(num_joints):
         print(p.getJointInfo(paddle.robot_id, joint))
 
     return paddle

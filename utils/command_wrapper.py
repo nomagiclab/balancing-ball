@@ -16,3 +16,8 @@ class CommandWrapper:
         ret["body_type"] = command_result[10]
         ret["collision_margin"] = command_result[11]
         return ret
+
+    def get_base_velocity(command_result):
+        ret = dict()
+        ret["linear_velocity"] = command_result[0]
+        ret["angular_velocity"] = command_result[1]

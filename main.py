@@ -2,9 +2,7 @@
 import pybullet as p
 import time
 import argparse
-from utils.environment import init_env_and_load_assets, update_wind_controllers, \
-    BALL_DEFAULT_ORIENTATION, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION
-from utils.button import Button
+from utils.environment import init_env_and_load_assets, update_wind_controllers
 
 
 def get_mode():
@@ -18,7 +16,7 @@ def get_mode():
 
 keyboard_mode = get_mode()
 
-ball_id, paddle, wind_controllers = init_env_and_load_assets(p)
+ball, paddle, wind_controllers = init_env_and_load_assets(p)
 
 
 if keyboard_mode:
@@ -29,23 +27,14 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
-# Ball buttons
-set_ball_init_height = p.addUserDebugParameter("Set initial ball height", 0, MAX_BALL_HEIGHT, BALL_DEFAULT_POSITION[2])
-reset_ball_button = Button(p.addUserDebugParameter("Reset ball position", 1, 0, 0))
-
-
 while True:
     if keyboard_mode:
         paddle.steer_with_keyboard(p.readUserDebugParameter(rotation_speed_id))
     else:
         paddle.read_and_update_joint_position()
 
-    # Reset ball position if button was clicked.
-    if reset_ball_button.was_clicked():
-        height = p.readUserDebugParameter(set_ball_init_height)
-        # Also sets velocity to 0.
-        p.resetBasePositionAndOrientation(ball_id, [BALL_DEFAULT_POSITION[0], BALL_DEFAULT_POSITION[1], height],
-                                          BALL_DEFAULT_ORIENTATION)
+    ball.check_and_update_height(p)
+    ball.check_and_update_rotation(p)
 
     update_wind_controllers(p, *wind_controllers)
 

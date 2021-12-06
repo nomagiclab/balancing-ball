@@ -1,10 +1,8 @@
 import pybullet_data
 from paddle.paddle import Paddle
+from utils.ball import Ball
 
 G = 9.81
-MAX_BALL_HEIGHT = 2
-BALL_DEFAULT_ORIENTATION = [0, 0, 0, 1]
-BALL_DEFAULT_POSITION = [0.15, 0, 1]
 BASE_PLANE_POSITION = [0, 0, -0.1]
 
 
@@ -43,17 +41,6 @@ def load_plane(p):
     return plane
 
 
-# Loads ball urdf and sets dynamics parameters.
-def load_ball(p):
-    ball_id = p.loadURDF("urdf_models/ball.urdf", basePosition=BALL_DEFAULT_POSITION)
-
-    # TODO Find exact values of this coefficients.
-    # Perhaps constants should be aggregated in a better way.
-    # Some of them are in the urdf file, some are passed in the function below. It might be confusing.
-    p.changeDynamics(ball_id, -1, restitution=0.7, lateralFriction=0.2, spinningFriction=0.2, rollingFriction=0.002)
-    return ball_id
-
-
 def load_paddle(p):
     # load our paddle
     paddle = Paddle(p)
@@ -70,6 +57,6 @@ def init_env_and_load_assets(p):
     init_environment(p)
     wind_controllers = init_wind_controllers(p)
     load_plane(p)
-    ball = load_ball(p)
+    ball = Ball(p)
     paddle = load_paddle(p)
     return ball, paddle, wind_controllers

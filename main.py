@@ -53,11 +53,8 @@ while True:
 
     # Check if the force button was clicked, and throw the ball eventually.
     if throwBallButton.wasClicked():
-        # force_ball_val = p.readUserDebugParameter(force_ball_button)
         curr_ball = p.getBasePositionAndOrientation(ballId)[0]
         curr_paddle = paddle.get_center_position()
-        # vec = utils.sub_vertices(curr_paddle, curr_ball)
-        # vec = utils.scale_vector(vec)
         vec = get_force_vector(curr_ball, curr_paddle)
         p.applyExternalForce(ballId, -1, vec, [0, 0, 0], p.WORLD_FRAME)
 

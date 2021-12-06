@@ -43,11 +43,11 @@ while True:
     update_wind_controllers(p, *wind_controllers)
 
     # Check if the force button was clicked, and throw the ball eventually.
-    if throwBallButton.wasClicked():
-        curr_ball = p.getBasePositionAndOrientation(ballId)[0]
+    if throwBallButton.was_clicked():
+        curr_ball = p.getBasePositionAndOrientation(ball.id)[0]
         curr_paddle = paddle.get_center_position()
         vec = get_force_vector(curr_ball, curr_paddle)
-        p.applyExternalForce(ballId, -1, vec, [0, 0, 0], p.WORLD_FRAME)
+        p.applyExternalForce(ball.id, -1, vec, [0, 0, 0], p.WORLD_FRAME)
 
     p.stepSimulation()
 

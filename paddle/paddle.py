@@ -72,7 +72,6 @@ class Paddle(ABCPaddle):
                                                        targetPosition=p[i],
                                                        maxVelocity=vel)
 
-
     def get_center_position(self):
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
 

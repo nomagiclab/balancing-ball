@@ -33,7 +33,7 @@ while True:
     else:
         paddle.read_and_update_joint_position()
 
-    ball.check_and_update_height(p)
+    ball.check_if_drop_with_rotation(p)
     ball.check_and_update_rotation(p)
 
     update_wind_controllers(p, *wind_controllers)

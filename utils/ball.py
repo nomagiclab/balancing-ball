@@ -42,7 +42,7 @@ class Ball:
         p.resetBasePositionAndOrientation(self.id, [self.DEFAULT_POSITION[0], self.DEFAULT_POSITION[1], height],
                                           self.DEFAULT_ORIENTATION)
 
-    def check_and_update_height(self, p):
+    def check_if_drop_with_rotation(self, p):
         if self.set_ball_height_button.was_clicked():
             self.reset_ball_position(p, p.readUserDebugParameter(self.set_ball_height_slider))
             self._set_ball_angular_velocity(p, [p.readUserDebugParameter(i) for i in self.set_rotation_sliders])

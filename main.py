@@ -2,6 +2,8 @@
 import pybullet as p
 import time
 import argparse
+from utils.physics import get_force_vector
+from utils.button import Button
 from utils.environment import init_env_and_load_assets, update_wind_controllers
 
 
@@ -27,6 +29,8 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
+throw_ball_button = Button(p.addUserDebugParameter("Throw ball towards paddle", 1, 0, 0))
+
 while True:
     if keyboard_mode:
         paddle.steer_with_keyboard(p.readUserDebugParameter(rotation_speed_id))
@@ -37,6 +41,13 @@ while True:
     ball.check_and_update_rotation(p)
 
     update_wind_controllers(p, *wind_controllers)
+
+    # Check if the throw button was clicked, and throw the ball if so.
+    if throw_ball_button.was_clicked():
+        curr_ball = p.getBasePositionAndOrientation(ball.id)[0]
+        curr_paddle = paddle.get_center_position()
+        vec = get_force_vector(curr_ball, curr_paddle)
+        p.applyExternalForce(ball.id, -1, vec, [0, 0, 0], p.WORLD_FRAME)
 
     p.stepSimulation()
 

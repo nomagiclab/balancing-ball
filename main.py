@@ -29,7 +29,7 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
-throwBallButton = Button(p.addUserDebugParameter("Throw ball towards paddle", 1, 0, 0))
+throw_ball_button = Button(p.addUserDebugParameter("Throw ball towards paddle", 1, 0, 0))
 
 while True:
     if keyboard_mode:
@@ -42,8 +42,8 @@ while True:
 
     update_wind_controllers(p, *wind_controllers)
 
-    # Check if the force button was clicked, and throw the ball eventually.
-    if throwBallButton.was_clicked():
+    # Check if the throw button was clicked, and throw the ball if so.
+    if throw_ball_button.was_clicked():
         curr_ball = p.getBasePositionAndOrientation(ball.id)[0]
         curr_paddle = paddle.get_center_position()
         vec = get_force_vector(curr_ball, curr_paddle)

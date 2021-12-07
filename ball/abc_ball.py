@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
+from typing import List
 
 
 class ABCBall(ABC):
@@ -6,5 +7,5 @@ class ABCBall(ABC):
         pass
 
     @abstractmethod
-    def get_position(self):
+    def get_position(self) -> List[float]:
         pass

@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
+from typing import List
 
 
 class ABCPaddle(ABC):
@@ -17,11 +18,18 @@ class ABCPaddle(ABC):
         pass
 
     @abstractmethod
-    def move_by_vector(self, v):
+    def move_by_vector(self, vector: List[float]):
         pass
 
     @abstractmethod
-    def move_to_position(self, p):
+    def move_to_position(self, position: List[float]):
+        pass
+
+    @abstractmethod
+    def get_center_position(self) -> List[float]:
+        pass
+
+    def check_if_in_range(self, position: List[float]) -> bool:
         pass
 
     #TODO: Will this be even useful someday?

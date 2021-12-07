@@ -10,7 +10,8 @@ class Paddle(ABCPaddle):
     # These are hard coded values, so always make sure to check these after changing paddle urdf model.
     MOVE_AXIS_JOINTS = {'x': 2, 'y': 1, 'z': 0}
     ROTATE_AXIS_JOINTS = {'x': 5, 'y': 4, 'z': 3}
-    PADDLE_LINK_ID = 6
+    PADDLE_LINK_ID = 5
+
     joint_controllers = typing.List[int]
 
     def __init__(self, pybullet_client):
@@ -74,7 +75,6 @@ class Paddle(ABCPaddle):
 
     def get_center_position(self):
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
-
 
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):
         p = self.pybullet_client

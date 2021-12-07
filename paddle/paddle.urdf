@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <robot name="robot">
+    <!---This is a link that will be used to move the robot around the z axis-->
     <link name="base_link">
         <inertial>
             <mass value="0"/>
@@ -14,6 +15,7 @@
         <axis xyz="0 0 1"/>
         <limit effort="1000.0" lower="-0.1" upper="5.0" velocity="0.2"/>
     </joint>
+    <!---This is a link that will be used to move the robot around the y axis-->
     <link name="y_control">
         <inertial>
             <mass value="0.1" />
@@ -28,6 +30,7 @@
         <axis xyz="0 1 0"/>
         <limit effort="1000.0" lower="-0.1" upper="1.1" velocity="0.2"/>
     </joint>
+    <!---This is a link that will be used to move the robot around the x axis-->
     <link name="x_control">
         <inertial>
             <mass value="0.1" />
@@ -42,6 +45,7 @@
         <axis xyz="1 0 0"/>
         <limit effort="1000.0" lower="-1.1" upper="1" velocity="0.2"/>
     </joint>
+    <!-- This link will allow the paddle to rotate around the z axis -->
     <link name="z_roll_control">
         <inertial>
             <mass value="0.1" />
@@ -56,6 +60,7 @@
         <axis xyz="0 0 1"/>
         <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
     </joint>
+    <!-- This link will allow the paddle to rotate around the y axis -->
     <link name="y_roll_control">
         <inertial>
             <mass value="0.1" />
@@ -70,6 +75,7 @@
         <axis xyz="0 1 0"/>
         <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
     </joint>
+    <!-- This link will allow the paddle to rotate around the x axis -->
     <link name="x_roll_control">
         <inertial>
             <mass value="0.1" />
@@ -78,9 +84,10 @@
                 izx = "0" izy = "0" izz = "0" />
         </inertial>
     </link>
+    <!-- Connect all the above links to the paddle head center.-->
     <joint name="x_gripper_roll" type="revolute">
         <parent link="x_roll_control"/>
-        <child link="handle"/>
+        <child link="pad"/>
         <axis xyz="1 0 0"/>
         <limit lower="-3.14" upper="3.14" velocity="3.14" effort="10000"/>
     </joint>
@@ -119,9 +126,9 @@
         </collision>
     </link>
     <joint name="paddle_to_handle" type="fixed">
-        <parent link="handle"/>
-        <child link="pad"/>
-        <origin xyz="0.18 -0.0125 0"/>
+        <parent link="pad"/>
+        <child link="handle"/>
+        <origin xyz="0.18 0 0"/>
         <axis xyz="1 0 0"/>
     </joint>
 </robot>

@@ -1,5 +1,4 @@
-import typing
-
+from typing import List
 from paddle.abc_paddle import ABCPaddle
 
 
@@ -11,8 +10,7 @@ class Paddle(ABCPaddle):
     MOVE_AXIS_JOINTS = {'x': 2, 'y': 1, 'z': 0}
     ROTATE_AXIS_JOINTS = {'x': 5, 'y': 4, 'z': 3}
     PADDLE_LINK_ID = 5
-
-    joint_controllers = typing.List[int]
+    joint_controllers = List[int]
 
     def __init__(self, pybullet_client):
         super().__init__(pybullet_client)
@@ -51,7 +49,9 @@ class Paddle(ABCPaddle):
                                                    self.pybullet_client.POSITION_CONTROL,
                                                    targetPosition=joint_pos + angle * 3.14 / 180)
 
-    def move_by_vector(self, v, vel=1):
+    def move_by_vector(self, vector: List[float], vel=1):
+        assert len(vector) == 3
+
         axes = ['x', 'y', 'z']
 
         for i in range(3):
@@ -60,20 +60,22 @@ class Paddle(ABCPaddle):
             self.pybullet_client.setJointMotorControl2(self.robot_id,
                                                        self.MOVE_AXIS_JOINTS[axes[i]],
                                                        self.pybullet_client.POSITION_CONTROL,
-                                                       targetPosition=joint_pos + v[i],
+                                                       targetPosition=joint_pos + vector[i],
                                                        maxVelocity=vel)
 
-    def move_to_position(self, p, vel=1):
+    def move_to_position(self, position: List[float], vel=1):
+        assert len(position) == 3
+
         axes = ['x', 'y', 'z']
 
         for i in range(3):
             self.pybullet_client.setJointMotorControl2(self.robot_id,
                                                        self.MOVE_AXIS_JOINTS[axes[i]],
                                                        self.pybullet_client.POSITION_CONTROL,
-                                                       targetPosition=p[i],
+                                                       targetPosition=position[i],
                                                        maxVelocity=vel)
 
-    def get_center_position(self):
+    def get_center_position(self) -> List[float]:
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
 
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):

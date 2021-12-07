@@ -1,6 +1,10 @@
+from typing import Tuple
+
 import pybullet_data
+
+from ball.pybullet_ball import PybulletBall
+from ball.pybullet_ball_controller import PybulletBallController
 from paddle.paddle import Paddle
-from utils.ball import Ball
 
 G = 9.81
 BASE_PLANE_POSITION = [0, 0, -0.1]
@@ -53,10 +57,10 @@ def load_paddle(p):
     return paddle
 
 
-def init_env_and_load_assets(p):
+def init_env_and_load_assets(p) -> Tuple[PybulletBallController, Paddle, Tuple[int, int]]:
     init_environment(p)
     wind_controllers = init_wind_controllers(p)
     load_plane(p)
-    ball = Ball(p)
+    ball_controller = PybulletBallController(PybulletBall(p))
     paddle = load_paddle(p)
-    return ball, paddle, wind_controllers
+    return ball_controller, paddle, wind_controllers

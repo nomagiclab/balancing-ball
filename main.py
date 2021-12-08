@@ -4,8 +4,7 @@ import time
 
 import pybullet as p
 
-from controllers.pid_balancer import OUT_OF_RANGE
-from utils.environment import init_env_and_load_assets, update_wind_controllers, init_standard_pid_tools
+from utils.environment import init_env_and_load_assets, update_wind_controllers
 from utils.pid_performer import PidPerformer
 
 

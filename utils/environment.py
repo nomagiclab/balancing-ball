@@ -48,7 +48,7 @@ def load_plane(p):
     # load a plane (Not the flying one!)
     plane = p.loadURDF("plane.urdf", BASE_PLANE_POSITION, useFixedBase=True)
     # TODO Find exact values of this coefficients. Check  contactDamping, contactStiffness.
-    p.changeDynamics(plane, -1, restitution=0.7, contactStiffness=2000, contactDamping=10)
+    p.changeDynamics(plane, -1, restitution=0.7, lateralFriction=1, contactStiffness=2000, contactDamping=10)
     return plane
 
 

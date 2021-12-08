@@ -18,7 +18,7 @@ class Paddle(ABCPaddle):
         self.pybullet_client.changeDynamics(self.robot_id, -1, mass=0.0)
 
         # Set the friction and restitution of the paddle.
-        self.pybullet_client.changeDynamics(self.robot_id, self.PADDLE_LINK_ID, lateralFriction=0.01, restitution=0.7)
+        self.pybullet_client.changeDynamics(self.robot_id, self.PADDLE_LINK_ID, lateralFriction=1, restitution=0.7)
 
     def reset_position(self):
         self.pybullet_client.resetBasePositionAndOrientation(self.robot_id, [0, 0, 0], [0, 0, 0, 1])

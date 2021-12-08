@@ -92,7 +92,8 @@ class Paddle(ABCPaddle):
     def check_if_in_range(self, position: List[float]) -> bool:
         center = self.get_center_position()
 
-        #TODO - This 0.2 value is only a placeholder, if we want to do this correctly, then we will have to take the paddle angles into account.
+        # TODO - This 0.2 value is only a placeholder, if we want to do this correctly,
+        # then we will have to take the paddle angles into account.
         return abs(position[0] - center[0]) < 0.2 and abs(position[1] - center[1]) < 0.2
 
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):

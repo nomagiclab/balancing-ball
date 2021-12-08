@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
+import pybullet
+
 
 class ABCPaddle(ABC):
     @property
@@ -8,7 +10,7 @@ class ABCPaddle(ABC):
     def urdf_model(self):
         pass
 
-    def __init__(self, pybullet_client, *args, **kwargs):
+    def __init__(self, pybullet_client: pybullet, *args, **kwargs):
         self.pybullet_client = pybullet_client
 
         self.robot_id = self.pybullet_client.loadURDF(self.urdf_model, *args, **kwargs)

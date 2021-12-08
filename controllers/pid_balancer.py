@@ -13,7 +13,7 @@ class PIDBalancer:
         self.time_step = time_step
         self.current_time = 0
 
-    def calculate_next_angle(self) -> Union[Tuple[float, float], OUT_OF_RANGE]:
+    def calculate_next_angle(self) -> Union[Tuple[float, float], int]:
         try:
             err = self.tracker.get_error_vector()
             res = self.controller.compute(self.current_time, err)
@@ -25,7 +25,7 @@ class PIDBalancer:
             self.controller.reset()
             return OUT_OF_RANGE
 
-    def next_angle_generator(self) -> Union[Tuple[float, float], OUT_OF_RANGE]:
+    def next_angle_generator(self) -> Union[Tuple[float, float], int]:
         while True:
             yield self.calculate_next_angle()
 

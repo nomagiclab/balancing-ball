@@ -14,7 +14,11 @@ class ABCPaddle(ABC):
         self.robot_id = self.pybullet_client.loadURDF(self.urdf_model, *args, **kwargs)
 
     @abstractmethod
-    def rotate_around_axis(self, axis, angle):
+    def set_angle_on_axis(self, axis: str, angle: float):
+        pass
+
+    @abstractmethod
+    def rotate_around_axis(self, axis: str, angle: float):
         pass
 
     @abstractmethod
@@ -29,12 +33,6 @@ class ABCPaddle(ABC):
     def get_center_position(self) -> List[float]:
         pass
 
+    @abstractmethod
     def check_if_in_range(self, position: List[float]) -> bool:
         pass
-
-    #TODO: Will this be even useful someday?
-    '''
-    @abstractmethod
-    def create_gui_controlls(self):
-        pass
-    '''

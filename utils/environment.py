@@ -65,19 +65,21 @@ def load_paddle(p):
 
 
 def init_standard_pid_tools(p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_angle: float, min_angle: float) \
-        -> Tuple[Dict[str, float], Button, Tuple[int, int]]:
+        -> Tuple[Dict[str, float], Button, PIDBalancer]:
     P_parameter = p.addUserDebugParameter("P", 0, 500, 60)
     I_parameter = p.addUserDebugParameter("I", 0, 50, 1)
     D_parameter = p.addUserDebugParameter("D", 0, 6000, 50)
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
 
+    engine_tracker = BallTracker(ball, paddle)
+
     pid_controller = PIDController(p.readUserDebugParameter(P_parameter),
                                    p.readUserDebugParameter(I_parameter),
                                    p.readUserDebugParameter(D_parameter),
                                    max_angle,
-                                   min_angle)
-    engine_tracker = BallTracker(ball, paddle)
+                                   min_angle,
+                                   lambda: engine_tracker.get_and_update_smooth_derivative())
 
     balancer = PIDBalancer(engine_tracker, pid_controller)
 

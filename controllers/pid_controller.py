@@ -1,10 +1,11 @@
+from copy import deepcopy
 from typing import Tuple, List
 
 
 class PIDController:
     __debug = False
 
-    def __init__(self, kp: float, ki: float, kd: float, max_output: float, min_output: float):
+    def __init__(self, kp: float, ki: float, kd: float, max_output: float, min_output: float, d_calc):
         assert max_output >= min_output
 
         self.kp = kp
@@ -17,6 +18,8 @@ class PIDController:
         self._last_error = [0, 0]
         self._i_error = [0, 0]
         self._last_time = 0
+
+        self.derivative_calculator = d_calc
 
     def debug_on(self):
         self.__debug = True
@@ -40,10 +43,7 @@ class PIDController:
         # TODO - There should be a system that prevents integral windup problem.
 
         # Calculate the derivative error.
-        if dt > 0:
-            d_error = [(current_error[i] - self._last_error[i]) / dt for i in range(2)]
-        else:
-            d_error = [0, 0]
+        d_error = [x / dt if dt > 0 else 0 for x in self.derivative_calculator()]
 
         self._last_error = [x for x in current_error]
         self._last_time = current_time

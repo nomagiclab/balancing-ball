@@ -9,8 +9,9 @@ class PidPerformer:
     def __init__(self, pybullet_client: pybullet, ball: ABCBall, paddle: ABCPaddle):
         self.pybullet_client = pybullet_client
         self.pid_sliders, self.pid_button, self.pid_balancer = init_standard_pid_tools(
-            pybullet_client, ball, paddle, 45, -45)
+            pybullet_client, ball, paddle, 55, -55)
         self.paddle = paddle
+        self.pid_balancer.controller.debug_on()
 
     def perform_pid_step(self):
         desired_angles = self.pid_balancer.calculate_next_angle()

@@ -1,9 +1,14 @@
-from realsense import UsbRealsenseCamera
 import torch
 from torchvision.utils import save_image
 import cv2 as cv
 import time 
 import numpy as np
+
+import os
+
+from vision.realsense import UsbRealsenseCamera
+
+
 
 dir_name = 'imgs/'
 
@@ -11,6 +16,8 @@ COLOR_MIN = np.array([100, 40, 0],np.uint8)
 COLOR_MAX = np.array([140, 200, 200],np.uint8)
 
 camera = UsbRealsenseCamera()
+
+os.mkdir(dir_name)
 
 def convert(t: np.ndarray):
     return torch.Tensor(t).permute(2, 0, 1)/255

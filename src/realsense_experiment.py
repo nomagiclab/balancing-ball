@@ -13,9 +13,6 @@ from segmentation.segmentation import blurred_thresholding
 
 dir_name = 'imgs/'
 
-COLOR_MIN = np.array([100, 40, 0],np.uint8)
-COLOR_MAX = np.array([140, 200, 200],np.uint8)
-
 camera = UsbRealsenseCamera()
 
 os.makedirs(dir_name, exist_ok=True)

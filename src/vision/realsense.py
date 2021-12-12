@@ -5,7 +5,7 @@ from typing import Tuple
 
 import numpy as np
 import pyrealsense2 as rs
-from camera import AbstractCameraService
+from vision.camera import AbstractCameraService
 
 
 class UsbRealsenseCamera(AbstractCameraService):

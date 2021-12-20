@@ -5,6 +5,7 @@ import time
 import pybullet as p
 
 from utils.environment import init_env_and_load_assets, update_wind_controllers
+from virtualcam.virtualcam import VirtualCam
 
 
 def get_mode():
@@ -19,6 +20,8 @@ def get_mode():
 keyboard_mode = get_mode()
 
 ball_controller, paddle, wind_controllers = init_env_and_load_assets(p)
+
+virtualcam = VirtualCam(p, [1, 1, 1], 240, 240)
 
 
 if keyboard_mode:
@@ -40,6 +43,7 @@ while True:
     if ball_controller.should_throw_ball():
         ball_controller.throw_ball(paddle.get_center_position())
 
+    virtualcam.check_and_take_photo()
     update_wind_controllers(p, *wind_controllers)
 
     p.stepSimulation()

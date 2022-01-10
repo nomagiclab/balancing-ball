@@ -16,7 +16,6 @@ def get_mode():
 
     return args.mode == 'keyboard'
 
-
 keyboard_mode = get_mode()
 
 ball_controller, paddle, wind_controllers = init_env_and_load_assets(p)

@@ -78,8 +78,7 @@ def init_standard_pid_tools(p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_a
                                    p.readUserDebugParameter(I_parameter),
                                    p.readUserDebugParameter(D_parameter),
                                    max_angle,
-                                   min_angle,
-                                   lambda: engine_tracker.get_and_update_smooth_derivative())
+                                   min_angle)
 
     balancer = PIDBalancer(engine_tracker, pid_controller)
 

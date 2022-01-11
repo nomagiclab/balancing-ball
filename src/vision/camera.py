@@ -18,17 +18,17 @@ class AbstractCameraService(abc.ABC):
 
     @abc.abstractmethod
     def shape(self) -> Tuple[int, int]:
-        """ Returns (height, width) of the resulting image. """
+        """Returns (height, width) of the resulting image."""
 
     @abc.abstractmethod
     def take_photo(self) -> Photo:
-        """ Returns rgb, optionally depth, optionally segmentation. """
+        """Returns rgb, optionally depth, optionally segmentation."""
 
     @abc.abstractmethod
     def intrinsics(self):
-        """ Returns intrinsics matrix of the camera. """
+        """Returns intrinsics matrix of the camera."""
 
     @abc.abstractmethod
     def pose(self):
-        """ Returns the pose of the camera (3x3-dim rotation matrix, 3-dim translation vector)
-            in the robot coordinate system. """
+        """Returns the pose of the camera (3x3-dim rotation matrix, 3-dim translation vector)
+        in the robot coordinate system."""

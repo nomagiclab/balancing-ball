@@ -6,8 +6,8 @@ import pybullet_data
 from ball.abc_ball import ABCBall
 from ball.pybullet_ball import PybulletBall
 from ball.pybullet_ball_controller import PybulletBallController
-from controllers.pid_balancer import PIDBalancer
-from controllers.pid_controller import PIDController
+from pid.pid_balancer import PIDBalancer
+from pid.pid_controller import PIDController
 from paddle.abc_paddle import ABCPaddle
 from paddle.paddle import Paddle
 from trackers.ball_tracker import BallTracker
@@ -66,23 +66,23 @@ def load_paddle(p):
 
 def init_standard_pid_tools(p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_angle: float, min_angle: float) \
         -> Tuple[Dict[str, float], Button, PIDBalancer]:
-    P_parameter = p.addUserDebugParameter("P", 0, 500, 60)
-    I_parameter = p.addUserDebugParameter("I", 0, 50, 1)
-    D_parameter = p.addUserDebugParameter("D", 0, 6000, 50)
+    kp_slider = p.addUserDebugParameter("P", 0, 500, 60)
+    ki_slider = p.addUserDebugParameter("I", 0, 50, 1)
+    kd_slider = p.addUserDebugParameter("D", 0, 6000, 50)
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
 
     engine_tracker = BallTracker(ball, paddle)
 
-    pid_controller = PIDController(p.readUserDebugParameter(P_parameter),
-                                   p.readUserDebugParameter(I_parameter),
-                                   p.readUserDebugParameter(D_parameter),
+    pid_controller = PIDController(p.readUserDebugParameter(kp_slider),
+                                   p.readUserDebugParameter(ki_slider),
+                                   p.readUserDebugParameter(kd_slider),
                                    max_angle,
                                    min_angle)
 
     balancer = PIDBalancer(engine_tracker, pid_controller)
 
-    return {'kp': P_parameter, 'ki': I_parameter, 'kd': D_parameter}, set_pid_button, balancer
+    return {'kp': kp_slider, 'ki': ki_slider, 'kd': kd_slider}, set_pid_button, balancer
 
 
 def init_env_and_load_assets(p) -> Tuple[PybulletBallController, ABCBall, Paddle, Tuple[int, int]]:

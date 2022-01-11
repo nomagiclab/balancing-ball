@@ -1,6 +1,6 @@
 from typing import Tuple, List
 
-from controllers.single_variable_pid import SingleVarPIDController
+from pid.single_variable_pid import SingleVarPIDController
 
 
 class PIDController:

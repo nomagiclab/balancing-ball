@@ -38,3 +38,7 @@ class ABCPaddle(ABC):
     @abstractmethod
     def check_if_in_range(self, position: List[float]) -> bool:
         pass
+
+    @abstractmethod
+    def reset_torque_pos(self):
+        pass

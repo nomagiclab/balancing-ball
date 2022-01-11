@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 
 from trackers.ball_tracker import BallTracker, OutOfRange
-from controllers.pid_controller import PIDController
+from pid.pid_controller import PIDController
 
 OUT_OF_RANGE = -1
 

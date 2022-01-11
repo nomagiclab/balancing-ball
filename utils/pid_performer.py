@@ -1,5 +1,5 @@
 from ball.abc_ball import ABCBall
-from controllers.pid_balancer import OUT_OF_RANGE
+from pid.pid_balancer import OUT_OF_RANGE
 from paddle.abc_paddle import ABCPaddle
 from utils.environment import init_standard_pid_tools
 import pybullet

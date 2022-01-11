@@ -18,7 +18,7 @@ class Paddle(ABCPaddle):
         self.pybullet_client.changeDynamics(self.robot_id, -1, mass=0.0)
 
         # Set the friction and restitution of the paddle.
-        self.pybullet_client.changeDynamics(self.robot_id, self.PADDLE_LINK_ID, lateralFriction=0.01, restitution=0.7)
+        self.pybullet_client.changeDynamics(self.robot_id, self.PADDLE_LINK_ID, lateralFriction=1, restitution=0.7)
 
     def reset_position(self):
         self.pybullet_client.resetBasePositionAndOrientation(self.robot_id, [0, 0, 0], [0, 0, 0, 1])
@@ -41,6 +41,12 @@ class Paddle(ABCPaddle):
                                                        self.pybullet_client.readUserDebugParameter(
                                                            self.joint_controllers[i]))
 
+    def set_angle_on_axis(self, axis, angle):
+        self.pybullet_client.setJointMotorControl2(self.robot_id,
+                                                   self.ROTATE_AXIS_JOINTS[axis],
+                                                   self.pybullet_client.POSITION_CONTROL,
+                                                   targetPosition=angle * 3.14 / 180)
+
     def rotate_around_axis(self, axis, angle):
         joint_pos = self.pybullet_client.getJointState(self.robot_id, self.ROTATE_AXIS_JOINTS[axis])[0]
 
@@ -48,6 +54,11 @@ class Paddle(ABCPaddle):
                                                    self.ROTATE_AXIS_JOINTS[axis],
                                                    self.pybullet_client.POSITION_CONTROL,
                                                    targetPosition=joint_pos + angle * 3.14 / 180)
+
+    # Resets all the rotation angles on the paddle.
+    def reset_torque_pos(self):
+        for axe in ['x', 'y', 'z']:
+            self.set_angle_on_axis(axe, 0)
 
     def move_by_vector(self, vector: List[float], vel=1):
         assert len(vector) == 3
@@ -77,6 +88,13 @@ class Paddle(ABCPaddle):
 
     def get_center_position(self) -> List[float]:
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
+
+    def check_if_in_range(self, position: List[float]) -> bool:
+        center = self.get_center_position()
+
+        # TODO - This 0.5 value is only a placeholder, if we want to do this correctly,
+        # then we will have to take the paddle angles into account.
+        return abs(position[0] - center[0]) < 0.5 and abs(position[1] - center[1]) < 0.5
 
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):
         p = self.pybullet_client

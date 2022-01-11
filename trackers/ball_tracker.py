@@ -3,6 +3,9 @@ from typing import List
 from ball.abc_ball import ABCBall
 from paddle.abc_paddle import ABCPaddle
 
+SMOOTHER_SIZE = 7
+N = 3
+
 
 class BallTracker:
     def __init__(self, ball: ABCBall, paddle: ABCPaddle):
@@ -16,6 +19,9 @@ class BallTracker:
             return [ball_pos - paddle_pos for ball_pos, paddle_pos in zip(ball_pos, paddle_pos)][:2]
         else:
             raise OutOfRange
+
+    def get_ball_position(self) -> List[float]:
+        return self.ball.get_position()
 
 
 class OutOfRange(Exception):

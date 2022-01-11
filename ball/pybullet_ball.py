@@ -1,10 +1,12 @@
+from typing import List
+
 from ball.abc_ball import ABCBall
 
 
 class PybulletBall(ABCBall):
     MAX_HEIGHT = 2
     DEFAULT_ORIENTATION = [0, 0, 0, 1]
-    DEFAULT_POSITION = [0.15, 0, 1]
+    DEFAULT_POSITION = [0, 0, 1]
 
     ROLLING_FRICTION = 0.0002
     SPINNING_FRICTION = 0.02
@@ -29,5 +31,5 @@ class PybulletBall(ABCBall):
     def set_position(self, position, orientation):
         self.pybullet_client.resetBasePositionAndOrientation(self.id, position, orientation)
 
-    def get_position(self):
+    def get_position(self) -> List[float]:
         return self.pybullet_client.getBasePositionAndOrientation(self.id)[0]

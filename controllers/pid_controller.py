@@ -1,64 +1,29 @@
 from typing import Tuple, List
 
+from controllers.single_variable_pid import SingleVarPIDController
+
 
 class PIDController:
     __debug = False
 
     def __init__(self,
                  kp: float, ki: float, kd: float,
-                 max_output: float, min_output: float,
-                 d_calc: type(lambda: List[float]) = None):
-        assert max_output >= min_output
+                 max_output: float, min_output: float):
+        self.x_controller = SingleVarPIDController(kp, ki, kd, max_output, min_output)
+        self.y_controller = SingleVarPIDController(kp, ki, kd, max_output, min_output)
 
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-
-        self.max_output = max_output
-        self.min_output = min_output
-
-        self._last_error = [0, 0]
-        self._i_error = [0, 0]
-        self._last_time = 0
-
-        self._derivative_calculator = d_calc
-
-    def set_up_derivative_calc(self, d_calc: type(lambda: List[float]) = None):
-        self._derivative_calculator = d_calc
-
-    def debug_on(self):
-        self.__debug = True
-
-    def debug_off(self):
-        self.__debug = False
-
-    def compute(self, current_time: float, current_error: List[float]) -> Tuple[float, float]:
-        if self._last_time == 0:
-            self._last_time = current_time
-
-        dt = current_time - self._last_time
-
-        # Calculate the proportional error.
-        p_error = [x for x in current_error]
-
-        # Calculate the integral error.
-        for i in range(2):
-            self._i_error[i] += current_error[i] * dt
-
+    def compute(self, current_error: List[float], current_time: float) -> Tuple[float, float]:
         # TODO - There should be a system that prevents integral windup problem.
-
-        # Calculate the derivative error.
-        d_error = [x / dt if dt > 0 else 0 for x in self._derivative_calculator()]
-
-        self._last_error = [x for x in current_error]
-        self._last_time = current_time
+        output_x = self.x_controller.compute(current_error[0], current_time)
+        output_y = self.y_controller.compute(current_error[1], current_time)
 
         if self.__debug:
-            print("PID errors (P, I, D):", p_error, self._i_error, d_error)
+            print("PID errors (P, I, D):", current_error,
+                  [self.x_controller.get_derivative(), self.y_controller.get_derivative()],
+                  [self.x_controller.get_integral(), self.y_controller.get_integral()])
 
         # TODO - There should be a system that smooths the paddle swings.
-        output = (self._limit_value(self.kp * p_error[0] + self.ki * self._i_error[0] + self.kd * d_error[0]),
-                  self._limit_value(self.kp * p_error[1] + self.ki * self._i_error[1] + self.kd * d_error[1]))
+        output = output_x, output_y
 
         if self.__debug:
             print("PID output:", output)
@@ -69,9 +34,22 @@ class PIDController:
         if self.__debug:
             print("PID reset!")
 
-        self._last_error = [0, 0]
-        self._i_error = [0, 0]
-        self._last_time = 0
+        self.x_controller.reset()
+        self.y_controller.reset()
 
-    def _limit_value(self, value: float) -> float:
-        return max(min(value, self.max_output), self.min_output)
+    def reset_coefficients(self, kp: float = None, ki: float = None, kd: float = None):
+        if kp is not None:
+            self.x_controller.kp = kp
+            self.y_controller.kp = kp
+        if ki is not None:
+            self.x_controller.ki = ki
+            self.y_controller.ki = ki
+        if kd is not None:
+            self.x_controller.kd = kd
+            self.y_controller.kd = kd
+
+    def debug_on(self):
+        self.__debug = True
+
+    def debug_off(self):
+        self.__debug = False

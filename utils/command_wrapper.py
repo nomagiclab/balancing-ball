@@ -1,4 +1,3 @@
-
 # This is just a helper class to make debugging easier.
 class CommandWrapper:
     def get_dynamics_info(command_result):

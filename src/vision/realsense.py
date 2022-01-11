@@ -38,7 +38,9 @@ class UsbRealsenseCamera(AbstractCameraService):
         color = np.asanyarray(color_frame.get_data())
         if colorized_depth:
             colorizer = rs.colorizer()
-            aligned_depth_frame = np.asanyarray(colorizer.colorize(aligned_depth_frame).get_data())
+            aligned_depth_frame = np.asanyarray(
+                colorizer.colorize(aligned_depth_frame).get_data()
+            )
         else:
             aligned_depth_frame = np.asanyarray(aligned_depth_frame.get_data())
 
@@ -46,14 +48,19 @@ class UsbRealsenseCamera(AbstractCameraService):
         return color, aligned_depth_frame * depth_scale
 
     def intrinsics(self):
-        return np.array([
-            [909.4387817382812, 0.0,               632.1474609375],
-            [0.0,               907.5307006835938, 347.2157897949219],
-            [0.0,               0.0,               1.0],
-        ])
+        return np.array(
+            [
+                [909.4387817382812, 0.0, 632.1474609375],
+                [0.0, 907.5307006835938, 347.2157897949219],
+                [0.0, 0.0, 1.0],
+            ]
+        )
 
     def pose(self):
-        cam_pose = np.loadtxt('environments/ur5e/handeye_calibration/results/camera_pose.txt', delimiter=' ')
+        cam_pose = np.loadtxt(
+            "environments/ur5e/handeye_calibration/results/camera_pose.txt",
+            delimiter=" ",
+        )
         return cam_pose[0:3, 0:3], cam_pose[0:3, 3]
 
     def shape(self) -> Tuple[int, int]:
@@ -65,4 +72,3 @@ class UsbRealsenseCamera(AbstractCameraService):
 
     def __del__(self):
         self.pipe.stop()
-

@@ -9,17 +9,17 @@ from utils.pid_performer import PidPerformer
 
 
 def get_mode():
-    parser = argparse.ArgumentParser(description='Mode manager')
+    parser = argparse.ArgumentParser(description="Mode manager")
 
-    parser.add_argument('--mode', dest='mode', type=str, help="Steering mode.")
-    parser.add_argument('--pid', action="store_true")
+    parser.add_argument("--mode", dest="mode", type=str, help="Steering mode.")
+    parser.add_argument("--pid", action="store_true")
     args = parser.parse_args()
 
     return args.mode, args.pid
 
 
 mode, pid_flag = get_mode()
-keyboard_mode = mode == 'keyboard'
+keyboard_mode = mode == "keyboard"
 
 ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 

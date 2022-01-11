@@ -5,8 +5,11 @@ from pid.pid_controller import PIDController
 
 OUT_OF_RANGE = -1
 
+
 class PIDBalancer:
-    def __init__(self, tracker: BallTracker, controller: PIDController, time_step: float = 0.008):
+    def __init__(
+        self, tracker: BallTracker, controller: PIDController, time_step: float = 0.008
+    ):
         self.tracker = tracker
         self.controller = controller
         self.time_step = time_step
@@ -28,5 +31,7 @@ class PIDBalancer:
         while True:
             yield self.calculate_next_angle()
 
-    def change_pid_coefficients(self, p: float = None, i: float = None, d: float = None):
-        self.controller.reset_coefficients(p, i, d)
+    def change_pid_coefficients(
+        self, kp: float = None, ki: float = None, kd: float = None
+    ):
+        self.controller.reset_coefficients(kp, ki, kd)

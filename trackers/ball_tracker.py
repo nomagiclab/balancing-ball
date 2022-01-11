@@ -16,7 +16,10 @@ class BallTracker:
         ball_pos = self.ball.get_position()
         if self.paddle.check_if_in_range(ball_pos):
             paddle_pos = self.paddle.get_center_position()
-            return [ball_pos - paddle_pos for ball_pos, paddle_pos in zip(ball_pos, paddle_pos)][:2]
+            return [
+                ball_pos - paddle_pos
+                for ball_pos, paddle_pos in zip(ball_pos, paddle_pos)
+            ][:2]
         else:
             raise OutOfRange
 

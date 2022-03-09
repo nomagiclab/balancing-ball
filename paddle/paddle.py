@@ -1,3 +1,4 @@
+import math
 from typing import List
 from paddle.abc_paddle import ABCPaddle
 
@@ -13,7 +14,9 @@ class Paddle(ABCPaddle):
     joint_controllers = List[int]
 
     def __init__(self, pybullet_client):
-        super().__init__(pybullet_client)
+        self.pybullet_client = pybullet_client
+        self.robot_id = self.pybullet_client.loadURDF(self.urdf_model)
+
         self.joint_ids = [i for i in range(0, 6)]
         self.pybullet_client.changeDynamics(self.robot_id, -1, mass=0.0)
 
@@ -63,7 +66,7 @@ class Paddle(ABCPaddle):
             self.robot_id,
             self.ROTATE_AXIS_JOINTS[axis],
             self.pybullet_client.POSITION_CONTROL,
-            targetPosition=angle * 3.14 / 180,
+            targetPosition=angle * math.pi / 180,
         )
 
     def rotate_around_axis(self, axis, angle):
@@ -75,7 +78,7 @@ class Paddle(ABCPaddle):
             self.robot_id,
             self.ROTATE_AXIS_JOINTS[axis],
             self.pybullet_client.POSITION_CONTROL,
-            targetPosition=joint_pos + angle * 3.14 / 180,
+            targetPosition=joint_pos + angle * math.pi / 180,
         )
 
     # Resets all the rotation angles on the paddle.

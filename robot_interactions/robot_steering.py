@@ -7,7 +7,7 @@ class Robot:
 
     def __init__(
         self,
-        ip_address="192.168.0.89",
+        ip_address,
     ):
         self.time = 1 / self.FREQUENCY
 
@@ -15,7 +15,6 @@ class Robot:
         self.rtde_c = rtde_control.RTDEControlInterface(
             self.ip_address, rtde_control.RTDEControlInterface.FLAG_USE_EXT_UR_CAP
         )
-        print(self.ip_address)
 
         self.rtde_r = rtde_receive.RTDEReceiveInterface(self.ip_address)
 

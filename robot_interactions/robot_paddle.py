@@ -28,13 +28,14 @@ class RobotPaddle(ABCPaddle):
 
     def __init__(
         self,
+        ip_address,
         initial_joint_position=None,
     ):
         self.initial_joint_position = self.INITIAL_JOINT_POSITION
         if initial_joint_position is not None:
             self.initial_joint_position = initial_joint_position
 
-        self.robot = Robot()
+        self.robot = Robot(ip_address)
 
         self.robot.move_joint_to_position(self.initial_joint_position)
 

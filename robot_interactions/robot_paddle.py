@@ -3,10 +3,11 @@ from typing import List
 
 from paddle.abc_paddle import ABCPaddle
 from robot_interactions.robot_steering import Robot
+from math import pi
 
 
 def to_radians(angle):
-    return angle * math.pi / 180
+    return angle * pi / 180
 
 
 class RobotPaddle(ABCPaddle):
@@ -17,14 +18,16 @@ class RobotPaddle(ABCPaddle):
     # According to the website above diameter of ping pong paddle is 17cm.
     PADDLE_RADIUS_METERS = 0.17 / 2
 
-    INITIAL_JOINT_POSITION = [
-        -1.6006999999999998,
-        -1.7271,
-        -2.2029999999999994,
-        -0.8079999999999998,
-        1.5951,
-        -0.030999999999999694,
-    ]
+    # INITIAL_JOINT_POSITION = [
+    #     -1.6006999999999998,
+    #     -1.7271,
+    #     -2.2029999999999994,
+    #     -0.8079999999999998,
+    #     1.5951,
+    #     -0.030999999999999694,
+    # ]
+
+    INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
 
     def __init__(
         self,

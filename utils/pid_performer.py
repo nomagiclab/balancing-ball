@@ -12,7 +12,7 @@ class PidPerformer:
             pybullet_client, ball, paddle, 55, -55
         )
         self.paddle = paddle
-        self.pid_balancer.controller.debug = True
+        self.pid_balancer.controller.debug = False
 
     def perform_pid_step(self):
         desired_angles = self.pid_balancer.calculate_next_angle()

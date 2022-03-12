@@ -1,5 +1,5 @@
 import math
-from typing import List
+from typing import List, Dict
 
 from paddle.abc_paddle import ABCPaddle
 from robot_interactions.robot_steering import Robot
@@ -12,7 +12,7 @@ def to_radians(angle):
 
 class RobotPaddle(ABCPaddle):
     MOVE_AXIS_INDEXES = {"x": 0, "y": 1, "z": 2}
-    ROTATE_AXIS_INDEXES = {"x": 3, "y": 4, "z": 5}
+    ROTATE_AXIS_INDEXES = {"x": 3, "y": 5, "z": 4}
 
     # https://www.dimensions.com/element/table-tennis-ping-pong-rackets-paddles
     # According to the website above diameter of ping pong paddle is 17cm.
@@ -43,13 +43,20 @@ class RobotPaddle(ABCPaddle):
         self.robot.move_joint_to_position(self.initial_joint_position)
 
         self.tcp_position = self.robot.get_tool_position()
+        self.initial_tcp_position = self.tcp_position.copy()
+
         """[x, y, z, rx, ry, rz] where rx, ry, rz is in radians"""
 
     def set_angle_on_axis(self, axis: str, angle: float):
-        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] = to_radians(angle)
+        print("Set angle on axis", axis, angle)
+        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] = (
+            self.initial_tcp_position[self.ROTATE_AXIS_INDEXES[axis]]
+            + to_radians(angle)
+        ) % (2 * pi)
         self.robot.move_tool_smooth(self.tcp_position)
 
     def rotate_around_axis(self, axis: str, angle: float):
+        print("Rotate around axis", axis, angle)
         self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += to_radians(angle)
         self.robot.move_tool_smooth(self.tcp_position)
 
@@ -67,6 +74,12 @@ class RobotPaddle(ABCPaddle):
         return [
             self.tcp_position[self.MOVE_AXIS_INDEXES[axis]] for axis in ["x", "y", "z"]
         ]
+
+    def get_center_orientation(self) -> Dict[str, float]:
+        rotations = {}
+        for axis, index in self.ROTATE_AXIS_INDEXES.items():
+            rotations[axis] = self.tcp_position[index]
+        return rotations
 
     def check_if_in_range(self, position: List[float]) -> bool:
         # Heuristic, check if distance in x and y is not greater than

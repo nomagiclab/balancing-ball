@@ -32,7 +32,8 @@ if keyboard_mode:
 else:
     paddle.create_joint_controllers()
 
-IP_ADDRESS = "10.20.4.170"
+# IP_ADDRESS = "10.20.4.170"
+IP_ADDRESS = "192.168.0.89"
 
 robot = RobotPaddle(IP_ADDRESS)
 biPaddle = BiPaddle(paddle, robot)

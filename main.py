@@ -33,7 +33,7 @@ else:
     paddle.create_joint_controllers()
 
 if pid_flag:
-    pid_performer = PidPerformer(p, ball, paddle)
+    pid_performer = PidPerformer(p, ball, paddle, virtualcam)
 
 
 while True:

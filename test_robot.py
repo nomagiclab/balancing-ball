@@ -1,33 +1,40 @@
 #!/usr/bin/env python3
-import math
+from math import  pi
 import time
 
 import robot_interactions.robot_paddle as robot_paddle
 
 IP_ADDRESS = "192.168.0.89"
+#
+# INITIAL_JOINT_POSITION = [
+#     -1.6006999999999998,
+#     -1.7271,
+#     -2.2029999999999994,
+#     -0.8079999999999998,
+#     1.5951,
+#     -0.030999999999999694,
+# ]
 
-paddle = robot_paddle.RobotPaddle(IP_ADDRESS)
+INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
 
+paddle = robot_paddle.RobotPaddle(IP_ADDRESS, INITIAL_JOINT_POSITION)
 paddle.update_tcp_info()
-time.sleep(0.02)
+print("tcp orientation = ", paddle.get_center_orientation())
 
-print("tcp position = ", paddle.get_center_orientation())
-time.sleep(1)
-
+axis = "x"
 
 # ---------------------------------
-paddle.rotate_around_axis("x", 45)
-time.sleep(5)
+paddle.set_angle_on_axis_sync(axis, -30)
 paddle.update_tcp_info()
-time.sleep(0.2)
-print("tcp position = ", paddle.get_center_orientation())
-
+time.sleep(1)
+print("tcp orientation = ", paddle.get_center_orientation())
+time.sleep(3)
 # -----------------------------------------
 
-paddle.rotate_around_axis("x", -90)
-time.sleep(10)
-paddle.update_tcp_info()
-time.sleep(0.02)
-print("tcp position = ", paddle.get_center_orientation())
-
-paddle.stop()
+# paddle.rotate_around_axis_sync(axis, -15)
+# paddle.update_tcp_info()
+# time.sleep(1)
+# print("tcp position = ", paddle.get_center_orientation())
+# time.sleep(1)
+# paddle.reset_torque_pos()
+# paddle.stop()

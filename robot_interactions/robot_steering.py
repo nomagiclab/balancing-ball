@@ -18,7 +18,7 @@ class Robot:
 
         self.rtde_r = rtde_receive.RTDEReceiveInterface(self.ip_address)
 
-    def move_joint_to_position(self, joint_position, speed=1.05, acceleration=1.4):
+    def move_joints_to_position(self, joint_position, speed=1.05, acceleration=1.4):
         """speed and acceleration default values are taken
         from moveJ"""
         self.rtde_c.moveJ(joint_position, speed, acceleration)
@@ -45,6 +45,17 @@ class Robot:
             gain,
         )
 
+    def move_tool_sync(
+        self,
+        tool_position,
+        speed=0.25,
+        acceleration=1.2,
+    ):
+        self.rtde_c.moveL(tool_position, speed, acceleration)
+
     def stop(self):
         self.rtde_c.servoStop()
         self.rtde_c.stopScript()
+
+    def get_joint_position(self):
+        return self.rtde_r.getActualQ()

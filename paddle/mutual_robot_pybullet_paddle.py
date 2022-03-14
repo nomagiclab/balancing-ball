@@ -20,12 +20,10 @@ class BiPaddle(ABCPaddle):
         self.pybullet_paddle.read_and_update_joint_position()
 
     def set_angle_on_axis(self, axis, angle):
-        print("Rotation around axis: ", axis, " - ", angle)
         self.pybullet_paddle.set_angle_on_axis(axis, angle)
         self.robot_paddle.set_angle_on_axis(axis, angle)
 
     def rotate_around_axis(self, axis, angle):
-        print("Rotation around axis: ", axis, " - ", angle)
         self.pybullet_paddle.rotate_around_axis(axis, angle)
         self.robot_paddle.rotate_around_axis(axis, angle)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from  math import pi
+from math import pi
 import time
 
 import robot_interactions.robot_paddle as robot_paddle
@@ -24,10 +24,14 @@ while True:
     print("center position =", paddle.get_center_position())
     print("center orientation =", paddle.get_center_orientation())
     print("Joints position =", paddle.get_joints_position())
-    order = int(input(f'What order you want to make {ROTATE} = rotate, '
-                      f'{MOVE_JOINT} = move to joint position, '
-                      f'{MOVE_ONLY_ONE_WRIST} = move_only_one_wrist, '
-                      f'{RESET_POSITION} = reset position: '))
+    order = int(
+        input(
+            f"What order you want to make {ROTATE} = rotate, "
+            f"{MOVE_JOINT} = move to joint position, "
+            f"{MOVE_ONLY_ONE_WRIST} = move_only_one_wrist, "
+            f"{RESET_POSITION} = reset position: "
+        )
+    )
     if order == ROTATE:
         axis = input("What axis (x, y, z): ")
         angle = float(input("Angle after rotation (degrees): "))
@@ -43,5 +47,3 @@ while True:
         print("Resetting position...")
         paddle.move_robot_to_position(INITIAL_JOINT_POSITION)
     print("")
-
-

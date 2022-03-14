@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from math import  pi
+from math import pi
 import time
 
 import robot_interactions.robot_paddle as robot_paddle

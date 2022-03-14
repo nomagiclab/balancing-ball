@@ -18,14 +18,14 @@ class RobotPaddle(ABCPaddle):
     # According to the website above diameter of ping pong paddle is 17cm.
     PADDLE_RADIUS_METERS = 0.17 / 2
 
-    INITIAL_JOINT_POSITION = [
-        -1.6006999999999998,
-        -1.7271,
-        -2.2029999999999994,
-        -0.8079999999999998,
-        1.5951,
-        -0.030999999999999694,
-    ]
+    # INITIAL_JOINT_POSITION = [
+    #     -1.6006999999999998,
+    #     -1.7271,
+    #     -2.2029999999999994,
+    #     -0.8079999999999998,
+    #     1.5951,
+    #     -0.030999999999999694,
+    # ]
 
     # INITIAL_JOINT_POSITION = [
     #     -1.5598993333333482,
@@ -36,8 +36,7 @@ class RobotPaddle(ABCPaddle):
     #     -0.030999999999999694,
     # ]
 
-
-    INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
+    # INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
 
     # INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, 0, 0]
 
@@ -91,7 +90,9 @@ class RobotPaddle(ABCPaddle):
             self.tcp_position[self.MOVE_AXIS_INDEXES[axis]] += vector[index]
         self.robot.move_tool_smooth(self.tcp_position)
 
+    # Depraceted
     def move_to_position(self, position: List[float]):
+        print("WARNING! depraceted method paddle.move_to_position used!")
         for index, axis in enumerate(["x", "y", "z"]):
             self.tcp_position[self.MOVE_AXIS_INDEXES[axis]] = position[index]
         self.robot.move_tool_smooth(self.tcp_position)
@@ -99,6 +100,8 @@ class RobotPaddle(ABCPaddle):
     def move_robot_to_position(self, position: List[float]):
         self.tcp_position = position
         self.robot.move_joints_to_position(position)
+        self.initial_joint_position = self.get_joints_position()
+        self.initial_tcp_position = self.get_center_position()
 
     def get_center_position(self) -> List[float]:
         return [

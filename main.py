@@ -5,6 +5,7 @@ import time
 import pybullet as p
 
 from utils.environment import init_env_and_load_assets, update_wind_controllers
+from virtualcam.virtualcam import VirtualCam
 from utils.pid_performer import PidPerformer
 
 
@@ -22,6 +23,7 @@ mode, pid_flag = get_mode()
 keyboard_mode = mode == "keyboard"
 
 ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
+virtualcam = VirtualCam(p, [1, 1, 1], 240, 240)
 
 if keyboard_mode:
     # add rotation speed controller
@@ -31,7 +33,7 @@ else:
     paddle.create_joint_controllers()
 
 if pid_flag:
-    pid_performer = PidPerformer(p, ball, paddle)
+    pid_performer = PidPerformer(p, ball, paddle, virtualcam)
 
 
 while True:
@@ -48,6 +50,7 @@ while True:
     if ball_controller.should_throw_ball():
         ball_controller.throw_ball(paddle.get_center_position())
 
+    virtualcam.check_and_take_photo()
     update_wind_controllers(p, *wind_controllers)
 
     p.stepSimulation()

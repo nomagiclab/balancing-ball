@@ -12,6 +12,7 @@ from paddle.abc_paddle import ABCPaddle
 from paddle.paddle import Paddle
 from trackers.ball_tracker import BallTracker
 from utils.button import Button
+from virtualcam.virtualcam import VirtualCam
 
 G = 9.81
 BASE_PLANE_POSITION = [0, 0, -0.1]
@@ -72,7 +73,12 @@ def load_paddle(p):
 
 
 def init_standard_pid_tools(
-    p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_angle: float, min_angle: float
+    p: pybullet,
+    ball: ABCBall,
+    paddle: ABCPaddle,
+    max_angle: float,
+    min_angle: float,
+    virtualcam: VirtualCam,
 ) -> Tuple[Dict[str, float], Button, PIDBalancer]:
     kp_slider = p.addUserDebugParameter("P", 0, 500, 60)
     ki_slider = p.addUserDebugParameter("I", 0, 50, 1)
@@ -80,7 +86,7 @@ def init_standard_pid_tools(
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
 
-    engine_tracker = BallTracker(ball, paddle)
+    engine_tracker = BallTracker(ball, paddle, virtualcam)
 
     pid_controller = PIDController(
         p.readUserDebugParameter(kp_slider),

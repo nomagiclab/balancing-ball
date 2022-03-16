@@ -2,14 +2,21 @@ from ball.abc_ball import ABCBall
 from pid.pid_balancer import OUT_OF_RANGE
 from paddle.abc_paddle import ABCPaddle
 from utils.environment import init_standard_pid_tools
+from virtualcam.virtualcam import VirtualCam
 import pybullet
 
 
 class PidPerformer:
-    def __init__(self, pybullet_client: pybullet, ball: ABCBall, paddle: ABCPaddle):
+    def __init__(
+        self,
+        pybullet_client: pybullet,
+        ball: ABCBall,
+        paddle: ABCPaddle,
+        virtualcam: VirtualCam,
+    ):
         self.pybullet_client = pybullet_client
         self.pid_sliders, self.pid_button, self.pid_balancer = init_standard_pid_tools(
-            pybullet_client, ball, paddle, 55, -55
+            pybullet_client, ball, paddle, 55, -55, virtualcam
         )
         self.paddle = paddle
         self.pid_balancer.controller.debug = True

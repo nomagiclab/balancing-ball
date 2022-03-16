@@ -73,7 +73,12 @@ def load_paddle(p):
 
 
 def init_standard_pid_tools(
-    p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_angle: float, min_angle: float, virtualcam: VirtualCam
+    p: pybullet,
+    ball: ABCBall,
+    paddle: ABCPaddle,
+    max_angle: float,
+    min_angle: float,
+    virtualcam: VirtualCam,
 ) -> Tuple[Dict[str, float], Button, PIDBalancer]:
     kp_slider = p.addUserDebugParameter("P", 0, 500, 60)
     ki_slider = p.addUserDebugParameter("I", 0, 50, 1)

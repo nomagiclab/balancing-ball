@@ -7,7 +7,13 @@ import pybullet
 
 
 class PidPerformer:
-    def __init__(self, pybullet_client: pybullet, ball: ABCBall, paddle: ABCPaddle, virtualcam: VirtualCam):
+    def __init__(
+        self,
+        pybullet_client: pybullet,
+        ball: ABCBall,
+        paddle: ABCPaddle,
+        virtualcam: VirtualCam,
+    ):
         self.pybullet_client = pybullet_client
         self.pid_sliders, self.pid_button, self.pid_balancer = init_standard_pid_tools(
             pybullet_client, ball, paddle, 55, -55, virtualcam

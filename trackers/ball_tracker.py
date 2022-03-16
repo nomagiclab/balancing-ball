@@ -33,7 +33,7 @@ class BallTracker:
                 for ball_pos, paddle_pos in zip(ball_pos, paddle_pos)
             ][:2]
         else:
-            raise OutOfRange    
+            raise OutOfRange
 
     def get_ball_position(self) -> List[float]:
         return self.ball.get_position()

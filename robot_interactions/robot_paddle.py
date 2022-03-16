@@ -114,6 +114,12 @@ class RobotPaddle(ABCPaddle):
             rotations[axis] = self.tcp_position[index]
         return rotations
 
+    def rotate_wrist(self, i, angle: float):
+        pos = self.robot.get_joint_position()
+        pos[i] += to_radians(angle)
+        pos[i] %= 2 * pi
+        self.robot.move_joints_to_position(pos)
+
     def get_joints_position(self) -> List[float]:
         return self.robot.get_joint_position()
 

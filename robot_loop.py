@@ -42,7 +42,9 @@ while True:
         paddle.move_robot_to_position(position)
     elif order == MOVE_ONLY_ONE_WRIST:
         print("What index (starting from 0): ")
+        index = int(input())
         new_wrist_position = float(input("Enter new position: "))
+        paddle.rotate_wrist(index, new_wrist_position)
     elif order == RESET_POSITION:
         print("Resetting position...")
         paddle.move_robot_to_position(INITIAL_JOINT_POSITION)

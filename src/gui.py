@@ -12,7 +12,6 @@ from segmentation.segmentation import blurred_thresholding, bitmask_average
 camera = UsbRealsenseCamera()
 
 while True:
-	#img = cv.imread('imgs/color0.png')
 	rgb, _, _ = camera.take_photo()
 	frame_thresholded = blurred_thresholding(rgb)
 	rgb = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)

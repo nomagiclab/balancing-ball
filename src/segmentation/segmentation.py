@@ -22,8 +22,6 @@ def blurred_thresholding(img: np.ndarray,
 			 COLOR_MAX: np.ndarray = ORANGE_MAX) -> np.ndarray:
 	blurred_img = cv.blur(img, blur_kernel)
 	return raw_thesholding(blurred_img, COLOR_MIN=COLOR_MIN, COLOR_MAX=COLOR_MAX)
-	
-	
 
 """
 Returns result of color thersholding on img.
@@ -63,4 +61,3 @@ def calculate_distance(mask: np.ndarray,
 	if mask_pixels == 0:
 		return -1
 	return np.sum(depth * (mask > 0))/mask_pixels
-		

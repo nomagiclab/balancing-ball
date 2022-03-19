@@ -20,6 +20,7 @@ os.makedirs(dir_name, exist_ok=True)
 def convert(t: np.ndarray):
     return torch.Tensor(t).permute(2, 0, 1) / 255
 
+
 for i in range(1):
     color, depth = camera.raw_photo(colorized_depth=True)
 

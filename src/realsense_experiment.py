@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 from vision.realsense import UsbRealsenseCamera
-from segmentation.segmentation import blurred_thresholding
+from segmentation.segmentation import blurred_thresholding, calculate_distance
 
 
 dir_name = "imgs/"

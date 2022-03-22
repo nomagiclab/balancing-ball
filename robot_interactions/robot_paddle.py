@@ -1,13 +1,12 @@
+import numpy as np
 import math
+import cv2
+
+from scipy.spatial.transform import Rotation as R
 from typing import List, Dict
 
 from paddle.abc_paddle import ABCPaddle
 from robot_interactions.robot_steering import Robot
-from math import pi
-
-
-def to_radians(angle):
-    return angle * pi / 180
 
 
 class RobotPaddle(ABCPaddle):
@@ -18,27 +17,23 @@ class RobotPaddle(ABCPaddle):
     # According to the website above diameter of ping pong paddle is 17cm.
     PADDLE_RADIUS_METERS = 0.17 / 2
 
-    # INITIAL_JOINT_POSITION = [
-    #     -1.6006999999999998,
-    #     -1.7271,
-    #     -2.2029999999999994,
-    #     -0.8079999999999998,
-    #     1.5951,
-    #     -0.030999999999999694,
-    # ]
+    INITIAL_POSE = [
+        0.7515497250864069,
+        -0.1073135360489473,
+        0.16513409510172675,
+        -0.009236061555885475,
+        1.5514308949914648,
+        0.06449220849435575,
+    ]
 
-    # INITIAL_JOINT_POSITION = [
-    #     -1.5598993333333482,
-    #     -1.7806993333333558,
-    #     -1.9649986666666663,
-    #     -0.9604642341667642,
-    #     1.5951000000000002,
-    #     -0.030999999999999694,
-    # ]
-
-    # INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
-
-    # INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, 0, 0]
+    INITIAL_Q = [
+        0.01856282353401184,
+        -1.725330492059225,
+        -2.404684543609619,
+        -2.1323920689024867,
+        -1.5921157042132776,
+        4.754701137542725,
+    ]
 
     def __init__(
         self,
@@ -47,42 +42,89 @@ class RobotPaddle(ABCPaddle):
     ):
         self.robot = Robot(ip_address)
 
-        if initial_joint_position is not None:
-            self.robot.move_joints_to_position(initial_joint_position)
+        if initial_joint_position is None:
+            self.robot.move_joints_to_position(RobotPaddle.INITIAL_Q)
+            # TODO - tbh nie wiem co to jest za pozycja, nie moge znalezc opcji ktora by zwracała dokładnie taką.
+            self.initial_pose = RobotPaddle.INITIAL_POSE
 
-        self.initial_joint_position = self.robot.get_joint_position()
-
+        self.initial_joint_position = self.get_joints_position()
         self.tcp_position = self.robot.get_tool_position()
         self.initial_tcp_position = self.tcp_position.copy()
 
         """[x, y, z, rx, ry, rz] where rx, ry, rz is in radians"""
 
+    @staticmethod
+    def __create_givens(theta):
+        return np.array(
+            [
+                [math.cos(theta), 0.0, math.sin(theta)],
+                [0.0, 1.0, 0.0],
+                [-math.sin(theta), 0.0, math.cos(theta)],
+            ]
+        )
+
+    def set_angles_rp(self, roll, pitch):
+        rotation_matrix = self.__create_givens(math.radians(-90))
+
+        joint_angles = np.array(
+            [
+                self.initial_joint_position[3],
+                -self.initial_joint_position[4],
+                -self.initial_joint_position[5],
+            ]
+        )
+
+        # Convert the joint rotation angles vector, to a rotation matrix.
+        rmat, _ = cv2.Rodrigues(joint_angles)
+        rmat = rotation_matrix.T.dot(rmat)
+
+        # Convert the angles to the rpy format.
+        rpy = R.from_matrix(rmat).as_euler("xyz")
+        rpy[1] = pitch
+        rpy[2] = -roll
+
+        # Convert back the rpy angles to the robot joint angles system.
+        rmat = R.from_euler("xyz", rpy).as_matrix()
+        rmat = rotation_matrix.dot(rmat)
+        rvec, _ = cv2.Rodrigues(rmat)
+        rvec = [rvec[0], -rvec[1], -rvec[2]]
+
+        # Update the correct robot pose.
+        pose = self.initial_joint_position.copy()
+        pose[3:] = rvec
+
+        # Calculate the IK solution, for the new pose.
+        p = self.robot.rtde_c.getInverseKinematics(pose)
+
+        # Move the robot to the new pose.
+        self.robot.servoJ(p)
+
     def set_angle_on_axis(self, axis: str, angle: float):
         print("Set angle on axis", axis, angle)
         self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] = (
             self.initial_tcp_position[self.ROTATE_AXIS_INDEXES[axis]]
-            + to_radians(angle)
-        ) % (2 * pi)
+            + math.radians(angle)
+        ) % (2 * math.pi)
         self.robot.move_tool_smooth(self.tcp_position)
 
     def set_angle_on_axis_sync(self, axis: str, angle: float):
         print("Set angle on axis SYNC", axis, angle)
         self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] = (
             self.initial_tcp_position[self.ROTATE_AXIS_INDEXES[axis]]
-            + to_radians(angle)
-        ) % (2 * pi)
+            + math.radians(angle)
+        ) % (2 * math.pi)
         self.robot.move_tool_sync(self.tcp_position)
 
     def rotate_around_axis(self, axis: str, angle: float):
         print("Rotate around axis", axis, angle)
-        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += to_radians(angle)
-        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] %= 2 * pi
+        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += math.radians(angle)
+        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] %= 2 * math.pi
         self.robot.move_tool_smooth(self.tcp_position)
 
     def rotate_around_axis_sync(self, axis: str, angle: float):
         print("Rotate around axis SYNC", axis, angle)
-        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += to_radians(angle)
-        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] %= 2 * pi
+        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += math.radians(angle)
+        self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] %= 2 * math.pi
         self.robot.move_tool_sync(self.tcp_position)
 
     def move_by_vector(self, vector: List[float]):
@@ -116,8 +158,8 @@ class RobotPaddle(ABCPaddle):
 
     def rotate_wrist(self, i, angle: float):
         pos = self.robot.get_joint_position()
-        pos[i] += to_radians(angle)
-        pos[i] %= 2 * pi
+        pos[i] += math.radians(angle)
+        pos[i] %= 2 * math.pi
         self.robot.move_joints_to_position(pos)
 
     def get_joints_position(self) -> List[float]:
@@ -139,7 +181,7 @@ class RobotPaddle(ABCPaddle):
         )
 
     def reset_torque_pos(self):
-        self.robot.move_joints_to_position(self.initial_joint_position)
+        self.robot.move_joints_to_position(RobotPaddle.INITIAL_Q)
 
     def update_tcp_info(self):
         self.tcp_position = self.robot.get_tool_position()

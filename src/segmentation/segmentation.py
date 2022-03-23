@@ -67,7 +67,6 @@ def bitmask_average(bitmask: np.ndarray) -> Optional[Tuple[float, float]]:
     avg_y = np.sum(turned_on_ys) / total_bits
     return avg_x, avg_y
 
-
 def bitmask_average_from_img(
     img: np.ndarray,
     blur_kernel: Tuple[int, int] = DEFAULT_BLUR_KERNEL,
@@ -78,8 +77,7 @@ def bitmask_average_from_img(
         img, blur_kernel=blur_kernel, COLOR_MIN=COLOR_MIN, COLOR_MAX=COLOR_MAX
     )
     return bitmask_average(frame_thresholded)
-
-
+  
 def calculate_distance(mask: np.ndarray, depth: np.ndarray) -> float:
     mask_pixels = np.sum(mask > 0)
     # TODO: define this behaviour

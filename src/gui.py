@@ -22,6 +22,7 @@ while True:
         avg_x, avg_y = bit_average
         # uncomment line below to see coordinates (camera takes another photo)
         # print(avg_x, avg_y, "< >", camera.object_position())
+
         circle_centre = int(avg_x), int(avg_y)
         frame_thresholded = cv.circle(
             frame_thresholded, circle_centre, 5, (0, 0, 255), -1

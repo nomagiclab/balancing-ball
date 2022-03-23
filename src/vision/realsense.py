@@ -1,11 +1,17 @@
 """
     Based on useful examples: https://github.com/IntelRealSense/librealsense/tree/jupyter/notebooks
 """
-from typing import Tuple
+from typing import Tuple, Optional
 
 import numpy as np
 import pyrealsense2 as rs
 from vision.camera import AbstractCameraService
+from segmentation.segmentation import (
+    ORANGE_MIN,
+    ORANGE_MAX,
+    DEFAULT_BLUR_KERNEL,
+    bitmask_average_from_img,
+)
 
 
 class UsbRealsenseCamera(AbstractCameraService):
@@ -69,6 +75,15 @@ class UsbRealsenseCamera(AbstractCameraService):
     def take_photo(self):
         color, depth = self.raw_photo(colorized_depth=False)
         return color, depth, None
+
+    def object_position(self) -> Optional[Tuple[float, float]]:
+        rgb, _, _ = self.take_photo()
+        return bitmask_average_from_img(
+            rgb,
+            blur_kernel=DEFAULT_BLUR_KERNEL,
+            COLOR_MIN=ORANGE_MIN,
+            COLOR_MAX=ORANGE_MAX,
+        )
 
     def __del__(self):
         self.pipe.stop()

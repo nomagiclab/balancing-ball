@@ -13,4 +13,4 @@ class RealsenseTracker(AbstractBallTracker):
         if res is None:
             raise OutOfRange
 
-        return [x for x in self.camera.object_position()]
+        return [x for x in res]

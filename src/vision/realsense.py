@@ -6,8 +6,8 @@ from typing import Tuple, Optional
 import cv2
 import numpy as np
 import pyrealsense2 as rs
-from vision.camera import AbstractCameraService
-from segmentation.segmentation import (
+from src.vision.camera import AbstractCameraService
+from src.segmentation.segmentation import (
     ORANGE_MIN,
     ORANGE_MAX,
     DEFAULT_BLUR_KERNEL,
@@ -104,10 +104,10 @@ class UsbRealsenseCamera(AbstractCameraService):
             return None
 
         if self.__gui:
-            image = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
-            cv2.circle(image, [int(x) for x in position], 10, (0, 0, 255), cv2.FILLED)
-            cv2.circle(image, [int(x) for x in self.center_point], 10, (0, 255, 0), cv2.FILLED)
-            cv2.imshow(self.__gui_window_name, rgb)
+            image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+            cv2.circle(image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED)
+            cv2.circle(image, tuple(int(x) for x in self.center_point), 5, (0, 255, 0), cv2.FILLED)
+            cv2.imshow(self.__gui_window_name, image)
 
         return position[0] - self.center_point[0], position[1] - self.center_point[1]
 

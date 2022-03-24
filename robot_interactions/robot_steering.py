@@ -21,7 +21,7 @@ class Robot:
     def set_tcp(self, positions):
         self.rtde_c.setTcp(positions)
 
-    def move_joints_to_position(self, joint_position, speed=1.05, acceleration=1.4):
+    def moveJ(self, joint_position, speed=1.05, acceleration=1.4):
         """speed and acceleration default values are taken
         from moveJ"""
         self.rtde_c.moveJ(joint_position, speed, acceleration)
@@ -29,7 +29,7 @@ class Robot:
     def get_tool_position(self):
         return self.rtde_r.getActualTCPPose()
 
-    def move_tool_smooth(
+    def servoL(
         self,
         tool_position,
         speed=0.5,

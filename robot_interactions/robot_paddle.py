@@ -43,7 +43,7 @@ class RobotPaddle(ABCPaddle):
         self.robot = Robot(ip_address)
 
         if initial_joint_position is None:
-            self.robot.move_joints_to_position(RobotPaddle.INITIAL_Q)
+            self.robot.moveJ(RobotPaddle.INITIAL_Q)
             # TODO - tbh nie wiem co to jest za pozycja, nie moge znalezc opcji ktora by zwracała dokładnie taką.
             self.initial_pose = RobotPaddle.INITIAL_POSE
 
@@ -105,7 +105,7 @@ class RobotPaddle(ABCPaddle):
             self.initial_tcp_position[self.ROTATE_AXIS_INDEXES[axis]]
             + math.radians(angle)
         ) % (2 * math.pi)
-        self.robot.move_tool_smooth(self.tcp_position)
+        self.robot.servoL(self.tcp_position)
 
     def set_angle_on_axis_sync(self, axis: str, angle: float):
         print("Set angle on axis SYNC", axis, angle)
@@ -119,7 +119,7 @@ class RobotPaddle(ABCPaddle):
         print("Rotate around axis", axis, angle)
         self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] += math.radians(angle)
         self.tcp_position[self.ROTATE_AXIS_INDEXES[axis]] %= 2 * math.pi
-        self.robot.move_tool_smooth(self.tcp_position)
+        self.robot.servoL(self.tcp_position)
 
     def rotate_around_axis_sync(self, axis: str, angle: float):
         print("Rotate around axis SYNC", axis, angle)
@@ -130,18 +130,18 @@ class RobotPaddle(ABCPaddle):
     def move_by_vector(self, vector: List[float]):
         for index, axis in enumerate(["x", "y", "z"]):
             self.tcp_position[self.MOVE_AXIS_INDEXES[axis]] += vector[index]
-        self.robot.move_tool_smooth(self.tcp_position)
+        self.robot.servoL(self.tcp_position)
 
     # Depraceted
     def move_to_position(self, position: List[float]):
         print("WARNING! depraceted method paddle.move_to_position used!")
         for index, axis in enumerate(["x", "y", "z"]):
             self.tcp_position[self.MOVE_AXIS_INDEXES[axis]] = position[index]
-        self.robot.move_tool_smooth(self.tcp_position)
+        self.robot.servoL(self.tcp_position)
 
     def move_robot_to_position(self, position: List[float]):
         self.tcp_position = position
-        self.robot.move_joints_to_position(position)
+        self.robot.moveJ(position)
         self.initial_joint_position = self.get_joints_position()
         self.initial_tcp_position = self.get_center_position()
 
@@ -160,7 +160,7 @@ class RobotPaddle(ABCPaddle):
         pos = self.robot.get_joint_position()
         pos[i] += math.radians(angle)
         pos[i] %= 2 * math.pi
-        self.robot.move_joints_to_position(pos)
+        self.robot.moveJ(pos)
 
     def get_joints_position(self) -> List[float]:
         return self.robot.get_joint_position()
@@ -181,7 +181,7 @@ class RobotPaddle(ABCPaddle):
         )
 
     def reset_torque_pos(self):
-        self.robot.move_joints_to_position(RobotPaddle.INITIAL_Q)
+        self.robot.moveJ(RobotPaddle.INITIAL_Q)
 
     def update_tcp_info(self):
         self.tcp_position = self.robot.get_tool_position()

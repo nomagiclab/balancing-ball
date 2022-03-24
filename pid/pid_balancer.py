@@ -1,6 +1,6 @@
 from typing import Union, Tuple
 
-from trackers.ball_tracker import BallTracker, OutOfRange
+from trackers.abstract_tracker import AbstractBallTracker, OutOfRange
 from pid.pid_controller import PIDController
 
 OUT_OF_RANGE = -1
@@ -8,7 +8,7 @@ OUT_OF_RANGE = -1
 
 class PIDBalancer:
     def __init__(
-        self, tracker: BallTracker, controller: PIDController, time_step: float = 0.008
+        self, tracker: AbstractBallTracker, controller: PIDController, time_step: float = 0.008
     ):
         self.tracker = tracker
         self.controller = controller

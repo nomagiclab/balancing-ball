@@ -115,15 +115,6 @@ class UsbRealsenseCamera(AbstractCameraService):
         if self.__gui:
             cv2.waitKey(5)
 
-    def object_position(self) -> Optional[Tuple[float, float]]:
-        rgb, _, _ = self.take_photo()
-        return bitmask_average_from_img(
-            rgb,
-            blur_kernel=DEFAULT_BLUR_KERNEL,
-            COLOR_MIN=ORANGE_MIN,
-            COLOR_MAX=ORANGE_MAX,
-        )
-
     def __del__(self):
         self.pipe.stop()
         cv2.destroyAllWindows()

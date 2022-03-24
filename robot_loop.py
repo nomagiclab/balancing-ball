@@ -4,7 +4,7 @@ import time
 
 import robot_interactions.robot_paddle as robot_paddle
 
-IP_ADDRESS = "192.168.3.17"
+IP_ADDRESS = "192.168.1.20"
 
 INITIAL_JOINT_POSITION = [-pi / 2, -pi / 2, -pi / 2, -pi, -pi / 2, 0]
 

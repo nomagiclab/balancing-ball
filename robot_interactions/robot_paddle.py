@@ -43,6 +43,7 @@ class RobotPaddle(ABCPaddle):
         self.robot = Robot(ip_address)
 
         if initial_joint_position is None:
+            self.robot.set_tcp([0, 0, 0.366, 0, 0, 0])
             self.robot.moveJ(RobotPaddle.INITIAL_Q)
             # TODO - tbh nie wiem co to jest za pozycja, nie moge znalezc opcji ktora by zwracała dokładnie taką.
             self.initial_pose = RobotPaddle.INITIAL_POSE
@@ -50,6 +51,7 @@ class RobotPaddle(ABCPaddle):
         self.initial_joint_position = self.get_joints_position()
         self.tcp_position = self.robot.get_tool_position()
         self.initial_tcp_position = self.tcp_position.copy()
+
 
         """[x, y, z, rx, ry, rz] where rx, ry, rz is in radians"""
 
@@ -68,9 +70,9 @@ class RobotPaddle(ABCPaddle):
 
         joint_angles = np.array(
             [
-                self.initial_joint_position[3],
-                -self.initial_joint_position[4],
-                -self.initial_joint_position[5],
+                self.initial_pose[3],
+                -self.initial_pose[4],
+                -self.initial_pose[5],
             ]
         )
 
@@ -90,7 +92,7 @@ class RobotPaddle(ABCPaddle):
         rvec = [rvec[0], -rvec[1], -rvec[2]]
 
         # Update the correct robot pose.
-        pose = self.initial_joint_position.copy()
+        pose = self.initial_pose.copy()
         pose[3:] = rvec
 
         # Calculate the IK solution, for the new pose.

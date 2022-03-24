@@ -1,6 +1,6 @@
 import rtde_control
 import rtde_receive
-
+import timeit
 
 class Robot:
     FREQUENCY = 500
@@ -13,7 +13,8 @@ class Robot:
 
         self.ip_address = ip_address
         self.rtde_c = rtde_control.RTDEControlInterface(
-            self.ip_address, rtde_control.RTDEControlInterface.FLAG_USE_EXT_UR_CAP
+            self.ip_address,
+            # rtde_control.RTDEControlInterface.FLAG_USE_EXT_UR_CAP
         )
 
         self.rtde_r = rtde_receive.RTDEReceiveInterface(self.ip_address)
@@ -57,7 +58,7 @@ class Robot:
         lookahead_t=0.05,
         gain=500,
     ):
-        self.rtde_c.servoJ(positions, speed, acceleration, time, lookahead_t, gain)
+        print(timeit.timeit(lambda: self.rtde_c.servoJ(positions, speed, acceleration, time, lookahead_t, gain), number=1))
 
     def move_tool_sync(
         self,

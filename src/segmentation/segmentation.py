@@ -68,6 +68,18 @@ def bitmask_average(bitmask: np.ndarray) -> Optional[Tuple[float, float]]:
     return avg_x, avg_y
 
 
+def bitmask_average_from_img(
+    img: np.ndarray,
+    blur_kernel: Tuple[int, int] = DEFAULT_BLUR_KERNEL,
+    COLOR_MIN: np.ndarray = ORANGE_MIN,
+    COLOR_MAX: np.ndarray = ORANGE_MAX,
+) -> Optional[Tuple[float, float]]:
+    frame_thresholded = blurred_thresholding(
+        img, blur_kernel=blur_kernel, COLOR_MIN=COLOR_MIN, COLOR_MAX=COLOR_MAX
+    )
+    return bitmask_average(frame_thresholded)
+
+
 def calculate_distance(mask: np.ndarray, depth: np.ndarray) -> float:
     mask_pixels = np.sum(mask > 0)
     # TODO: define this behaviour

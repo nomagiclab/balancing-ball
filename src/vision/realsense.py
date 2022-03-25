@@ -100,14 +100,17 @@ class UsbRealsenseCamera(AbstractCameraService):
             COLOR_MAX=ORANGE_MAX,
         )
 
-        if position is None:
-            return None
-
         if self.__gui:
             image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-            cv2.circle(image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED)
+
+            if position is not None:
+                cv2.circle(image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED)
+
             cv2.circle(image, tuple(int(x) for x in self.center_point), 5, (0, 255, 0), cv2.FILLED)
             cv2.imshow(self.__gui_window_name, image)
+
+        if position is None:
+            return None
 
         return position[0] - self.center_point[0], position[1] - self.center_point[1]
 

@@ -93,6 +93,8 @@ class UsbRealsenseCamera(AbstractCameraService):
     def object_position(self) -> Optional[Tuple[float, float]]:
         rgb, _, _ = self.take_photo()
 
+        image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+
         position = bitmask_average_from_img(
             rgb,
             blur_kernel=DEFAULT_BLUR_KERNEL,
@@ -101,8 +103,6 @@ class UsbRealsenseCamera(AbstractCameraService):
         )
 
         if self.__gui:
-            image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-
             if position is not None:
                 cv2.circle(image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED)
 

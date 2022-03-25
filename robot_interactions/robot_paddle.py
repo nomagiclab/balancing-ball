@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import cv2
+from cv2 import Rodrigues
 
 from scipy.spatial.transform import Rotation as R
 from typing import List, Dict
@@ -77,7 +77,7 @@ class RobotPaddle(ABCPaddle):
         )
 
         # Convert the joint rotation angles vector, to a rotation matrix.
-        rmat, _ = cv2.Rodrigues(joint_angles)
+        rmat, _ = Rodrigues(joint_angles)
         rmat = rotation_matrix.T.dot(rmat)
 
         # Convert the angles to the rpy format.
@@ -88,7 +88,7 @@ class RobotPaddle(ABCPaddle):
         # Convert back the rpy angles to the robot joint angles system.
         rmat = R.from_euler("xyz", rpy).as_matrix()
         rmat = rotation_matrix.dot(rmat)
-        rvec, _ = cv2.Rodrigues(rmat)
+        rvec, _ = Rodrigues(rmat)
         rvec = [rvec[0], -rvec[1], -rvec[2]]
 
         # Update the correct robot pose.

@@ -11,7 +11,7 @@ pid_controller = PIDController(float(input("Enter P: ")), float(input("Enter I: 
 pid_balancer = PIDBalancer(tracker, pid_controller)
 
 while True:
-    desired_angles = pid_balancer.calculate_next_angle()
+    desired_angles = pid_balancer.calculate_next_angle(True)
 
     if desired_angles == OUT_OF_RANGE:
         input("Ball is out of range, press key to continue...")

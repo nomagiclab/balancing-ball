@@ -6,7 +6,13 @@ from pid.pid_balancer import PIDBalancer, OUT_OF_RANGE
 from pid.pid_controller import PIDController
 
 tracker = RealsenseTracker(tuple(x / 2 for x in UsbRealsenseCamera.shape()), True)
-pid_controller = PIDController(float(input("Enter P: ")), float(input("Enter I: ")), float(input("Enter D: ")), 25, -25)
+pid_controller = PIDController(
+    float(input("Enter P: ")),
+    float(input("Enter I: ")),
+    float(input("Enter D: ")),
+    25,
+    -25,
+)
 
 pid_balancer = PIDBalancer(tracker, pid_controller)
 

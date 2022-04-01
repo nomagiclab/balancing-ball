@@ -26,4 +26,3 @@ class BallTracker(AbstractBallTracker):
 
     def get_ball_position(self) -> List[float]:
         return self.ball.get_position()
-

@@ -62,6 +62,7 @@ class Paddle(ABCPaddle):
             )
 
     def set_angle_on_axis(self, axis, angle):
+        """Parameter `angle` should be given in degrees."""
         self.pybullet_client.setJointMotorControl2(
             self.robot_id,
             self.ROTATE_AXIS_JOINTS[axis],
@@ -69,7 +70,12 @@ class Paddle(ABCPaddle):
             targetPosition=angle * math.pi / 180,
         )
 
+    def set_angles(self, x_angle, y_angle):
+        self.set_angle_on_axis("x", x_angle)
+        self.set_angle_on_axis("y", y_angle)
+
     def rotate_around_axis(self, axis, angle):
+        """Parameter `angle` should be given in degrees."""
         joint_pos = self.pybullet_client.getJointState(
             self.robot_id, self.ROTATE_AXIS_JOINTS[axis]
         )[0]
@@ -119,9 +125,11 @@ class Paddle(ABCPaddle):
             )
 
     def get_center_position(self) -> List[float]:
+        """Returns [x, y, z] coordinates of the center"""
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
 
     def check_if_in_range(self, position: List[float]) -> bool:
+        """Parameter `position` is in [x, y, z] order"""
         center = self.get_center_position()
 
         # TODO - This 0.5 value is only a placeholder, if we want to do this correctly,

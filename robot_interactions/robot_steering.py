@@ -2,6 +2,7 @@ import rtde_control
 import rtde_receive
 import timeit
 
+
 class Robot:
     FREQUENCY = 500
 
@@ -58,9 +59,16 @@ class Robot:
         lookahead_t=0.05,
         gain=500,
     ):
-        print(timeit.timeit(lambda: self.rtde_c.servoJ(positions, speed, acceleration, time, lookahead_t, gain), number=1))
+        print(
+            timeit.timeit(
+                lambda: self.rtde_c.servoJ(
+                    positions, speed, acceleration, time, lookahead_t, gain
+                ),
+                number=1,
+            )
+        )
 
-    def move_tool_sync(
+    def moveL(
         self,
         tool_position,
         speed=0.25,

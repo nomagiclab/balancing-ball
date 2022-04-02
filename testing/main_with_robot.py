@@ -7,7 +7,7 @@ import pybullet as p
 from utils.environment import init_env_and_load_assets, update_wind_controllers
 from utils.pid_performer import PidPerformer
 from robot_interactions.robot_paddle import RobotPaddle
-from paddle.mutual_robot_pybullet_paddle import BiPaddle
+from paddle.bi_paddle import BiPaddle
 
 
 def get_mode():

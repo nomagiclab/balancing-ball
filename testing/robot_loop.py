@@ -38,7 +38,7 @@ while True:
     if order == ROTATE:
         axis = input("What axis (x, y, z): ")
         angle = float(input("Angle after rotation (degrees): "))
-        paddle.set_angle_on_axis_sync(axis, angle)
+        paddle.set_angle_on_axis_moveL(axis, angle)
     if order == ROTATE_RP:
         r = float(input("Roll: "))
         p = float(input("Pitch: "))

@@ -8,7 +8,10 @@ OUT_OF_RANGE = -1
 
 class PIDBalancer:
     def __init__(
-        self, tracker: AbstractBallTracker, controller: PIDController, time_step: float = 0.008
+        self,
+        tracker: AbstractBallTracker,
+        controller: PIDController,
+        time_step: float = 0.008,
     ):
         self.tracker = tracker
         self.controller = controller

@@ -23,19 +23,18 @@ csv_writer_y = CsvWriter("y")
 
 pid_balancer = PIDBalancer(tracker, pid_controller)
 
-print(csv_writer_x.file_name, ' ', csv_writer_y.file_name)
+print(csv_writer_x.file_name, " ", csv_writer_y.file_name)
 input("All set?")
 
 while True:
     desired_angles = pid_balancer.calculate_next_angle(True)
 
     if desired_angles == OUT_OF_RANGE:
-        r, p = 0., 0.
+        r, p = 0.0, 0.0
     else:
         r, p = math.radians(desired_angles[0]), math.radians(desired_angles[1])
         csv_writer_x.update([P, I, D, r, pid_balancer.last_err[0] / 100, 0])
         csv_writer_y.update([P, I, D, p, pid_balancer.last_err[1] / 100, 0])
-
 
     print("ROLL, PITCH =", r, " --- ", p)
 

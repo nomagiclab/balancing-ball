@@ -24,7 +24,7 @@ while True:
     desired_angles = pid_balancer.calculate_next_angle(True)
 
     if desired_angles == OUT_OF_RANGE:
-        r, p = 0., 0.
+        r, p = 0.0, 0.0
     else:
         r, p = math.radians(desired_angles[0]), math.radians(desired_angles[1])
 

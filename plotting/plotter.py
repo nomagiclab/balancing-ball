@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from typing import List
 
-matplotlib.use('WX')
+matplotlib.use("WX")
 
 
 class Plotter:
@@ -23,9 +23,9 @@ class Plotter:
         plt.plot(x_values, y_values[0])
         plt.plot(x_values, y_values[1])
 
-        plt.xlabel('Time')
-        plt.ylabel('Error')
-        plt.title('PID')
+        plt.xlabel("Time")
+        plt.ylabel("Error")
+        plt.title("PID")
         plt.gcf().autofmt_xdate()
         plt.tight_layout()
 

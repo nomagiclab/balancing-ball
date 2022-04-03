@@ -14,6 +14,8 @@ class DelayedPybulletBall(ABCBall):
         self.positions_q = deque(maxlen=n_delayed)
 
     def get_position(self) -> List[float]:
-        ret = self.positions_q[0]
-        self.positions_q.append(self.ball.get_position())
+        new_position = self.ball.get_position()
+        ret = self.positions_q[0] if len(self.positions_q) > 0 else new_position
+        # print("Real ball position", new_position, "Returned position", ret)
+        self.positions_q.append(new_position)
         return ret

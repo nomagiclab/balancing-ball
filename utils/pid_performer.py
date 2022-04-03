@@ -1,16 +1,26 @@
 from ball.abc_ball import ABCBall
-from pid.pid_balancer import OUT_OF_RANGE
+from paddle.paddle import Paddle
+from pid.pid_balancer import OUT_OF_RANGE, PIDBalancer
 from paddle.abc_paddle import ABCPaddle
+from trackers.abstract_tracker import AbstractBallTracker
+from trackers.ball_tracker import BallTracker
 from utils.environment import init_standard_pid_tools
 import pybullet
 
 
 class PidPerformer:
-    def __init__(self, pybullet_client: pybullet, ball: ABCBall, paddle: ABCPaddle):
+    def __init__(
+        self,
+        pybullet_client: pybullet,
+        ball_tracker: AbstractBallTracker,
+        paddle: Paddle,
+    ):
         self.pybullet_client = pybullet_client
-        self.pid_sliders, self.pid_button, self.pid_balancer = init_standard_pid_tools(
-            pybullet_client, ball, paddle, 55, -55
+        self.pid_sliders, self.pid_button, pid_controller = init_standard_pid_tools(
+            pybullet_client, 55, -55
         )
+        self.pid_balancer = PIDBalancer(ball_tracker, pid_controller)
+
         self.paddle = paddle
         self.pid_balancer.controller.debug = False
 

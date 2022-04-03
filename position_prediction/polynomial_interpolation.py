@@ -4,9 +4,12 @@ from scipy import interpolate
 import numpy as np
 
 
-class PolynomialPredict:
+class PolynomialPredicter:
     def predict(self, positions: List[float]) -> float:
         n = len(positions)
+        if n == 1:
+            return positions[0]
+
         time_series = np.arange(n)
         f = interpolate.interp1d(time_series, positions, fill_value="extrapolate")
         return f(n)

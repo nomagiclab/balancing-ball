@@ -2,14 +2,24 @@ import time
 from collections import deque
 import pybullet as p
 
-from trackers.ball_tracker import BallTracker
+from ball.delayed_pybullet_ball import DelayedPybulletBall
+from position_prediction.polynomial_interpolation import PolynomialPredicter
+from trackers.predicting_ball_tracker import PredictingBallTracker
 from utils.environment import init_env_and_load_assets, update_wind_controllers
 from utils.pid_performer import PidPerformer
 
 ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 
 paddle.create_joint_controllers()
-pid_performer = PidPerformer(p, BallTracker(ball, paddle), paddle)
+
+N_DELAYED = 3
+N_PREDICT = 3
+
+predicter = PolynomialPredicter()
+tracker = PredictingBallTracker(
+    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter
+)
+pid_performer = PidPerformer(p, tracker, paddle)
 
 
 while True:

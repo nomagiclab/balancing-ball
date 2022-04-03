@@ -1,6 +1,6 @@
 from typing import List
 
-from ball.pybullet_ball import PyBulletBall
+from ball.abc_ball import ABCBall
 from paddle.paddle import Paddle
 from trackers.abstract_tracker import AbstractBallTracker, OutOfRange
 
@@ -9,7 +9,7 @@ N = 3
 
 
 class BallTracker(AbstractBallTracker):
-    def __init__(self, ball: PyBulletBall, paddle: Paddle):
+    def __init__(self, ball: ABCBall, paddle: Paddle):
         self.ball = ball
         self.paddle = paddle
 

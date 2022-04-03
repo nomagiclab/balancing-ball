@@ -100,14 +100,14 @@ class UsbRealsenseCamera(AbstractCameraService):
             COLOR_MAX=ORANGE_MAX,
         )
 
-        if position is None:
-            return None
-
         if self.__gui:
             image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-            cv2.circle(
-                image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED
-            )
+
+            if position is not None:
+                cv2.circle(
+                    image, tuple(int(x) for x in position), 5, (0, 0, 255), cv2.FILLED
+                )
+
             cv2.circle(
                 image,
                 tuple(int(x) for x in self.center_point),
@@ -117,20 +117,14 @@ class UsbRealsenseCamera(AbstractCameraService):
             )
             cv2.imshow(self.__gui_window_name, image)
 
+        if position is None:
+            return None
+
         return position[0] - self.center_point[0], position[1] - self.center_point[1]
 
     def gui_wait_key(self):
         if self.__gui:
             cv2.waitKey(5)
-
-    def object_position(self) -> Optional[Tuple[float, float]]:
-        rgb, _, _ = self.take_photo()
-        return bitmask_average_from_img(
-            rgb,
-            blur_kernel=DEFAULT_BLUR_KERNEL,
-            COLOR_MIN=ORANGE_MIN,
-            COLOR_MAX=ORANGE_MAX,
-        )
 
     def __del__(self):
         self.pipe.stop()

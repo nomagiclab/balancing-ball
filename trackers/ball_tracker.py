@@ -1,7 +1,7 @@
 from typing import List
 
-from ball.abc_ball import ABCBall
-from paddle.abc_paddle import ABCPaddle
+from ball.pybullet_ball import PyBulletBall
+from paddle.paddle import Paddle
 from trackers.abstract_tracker import AbstractBallTracker, OutOfRange
 
 SMOOTHER_SIZE = 7
@@ -9,7 +9,7 @@ N = 3
 
 
 class BallTracker(AbstractBallTracker):
-    def __init__(self, ball: ABCBall, paddle: ABCPaddle):
+    def __init__(self, ball: PyBulletBall, paddle: Paddle):
         self.ball = ball
         self.paddle = paddle
 

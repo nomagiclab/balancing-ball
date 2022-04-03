@@ -12,7 +12,7 @@ class PidPerformer:
             pybullet_client, ball, paddle, 55, -55
         )
         self.paddle = paddle
-        self.pid_balancer.controller.debug = True
+        self.pid_balancer.controller.debug = False
 
     def perform_pid_step(self):
         desired_angles = self.pid_balancer.calculate_next_angle()
@@ -21,10 +21,9 @@ class PidPerformer:
             self.paddle.reset_torque_pos()
         else:
             y_desired_angle, x_desired_angle = self.pid_balancer.calculate_next_angle()
-            self.paddle.set_angle_on_axis("x", x_desired_angle)
             # The y rotation direction is inverted,
+            self.paddle.set_angles(x_desired_angle, -y_desired_angle)
             # so we have to take the negative value.
-            self.paddle.set_angle_on_axis("y", -y_desired_angle)
 
         if self.pid_button.was_clicked():
             self.pid_balancer.change_pid_coefficients(

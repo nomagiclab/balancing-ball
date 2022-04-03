@@ -7,10 +7,13 @@ class RealsenseTracker(AbstractBallTracker):
     def __init__(self, center_point: Tuple[float, float], gui: bool = False):
         self.camera = UsbRealsenseCamera(center_point, gui)
 
-    def get_error_vector(self) -> List[float]:
+    def get_error_vector(self, return_on_lost: List[float] = None) -> List[float]:
         res = self.camera.object_position()
 
         if res is None:
-            raise OutOfRange
+            if return_on_lost is None:
+                raise OutOfRange
+
+            return return_on_lost
 
         return [x for x in res]

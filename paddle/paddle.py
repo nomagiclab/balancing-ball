@@ -1,3 +1,4 @@
+import math
 from typing import List
 from paddle.abc_paddle import ABCPaddle
 
@@ -13,7 +14,9 @@ class Paddle(ABCPaddle):
     joint_controllers = List[int]
 
     def __init__(self, pybullet_client):
-        super().__init__(pybullet_client)
+        self.pybullet_client = pybullet_client
+        self.robot_id = self.pybullet_client.loadURDF(self.urdf_model)
+
         self.joint_ids = [i for i in range(0, 6)]
         self.pybullet_client.changeDynamics(self.robot_id, -1, mass=0.0)
 
@@ -59,14 +62,20 @@ class Paddle(ABCPaddle):
             )
 
     def set_angle_on_axis(self, axis, angle):
+        """Parameter `angle` should be given in degrees."""
         self.pybullet_client.setJointMotorControl2(
             self.robot_id,
             self.ROTATE_AXIS_JOINTS[axis],
             self.pybullet_client.POSITION_CONTROL,
-            targetPosition=angle * 3.14 / 180,
+            targetPosition=angle * math.pi / 180,
         )
 
+    def set_angles(self, x_angle, y_angle):
+        self.set_angle_on_axis("x", x_angle)
+        self.set_angle_on_axis("y", y_angle)
+
     def rotate_around_axis(self, axis, angle):
+        """Parameter `angle` should be given in degrees."""
         joint_pos = self.pybullet_client.getJointState(
             self.robot_id, self.ROTATE_AXIS_JOINTS[axis]
         )[0]
@@ -75,7 +84,7 @@ class Paddle(ABCPaddle):
             self.robot_id,
             self.ROTATE_AXIS_JOINTS[axis],
             self.pybullet_client.POSITION_CONTROL,
-            targetPosition=joint_pos + angle * 3.14 / 180,
+            targetPosition=joint_pos + angle * math.pi / 180,
         )
 
     # Resets all the rotation angles on the paddle.
@@ -116,9 +125,11 @@ class Paddle(ABCPaddle):
             )
 
     def get_center_position(self) -> List[float]:
+        """Returns [x, y, z] coordinates of the center"""
         return self.pybullet_client.getLinkState(self.robot_id, self.PADDLE_LINK_ID)[0]
 
     def check_if_in_range(self, position: List[float]) -> bool:
+        """Parameter `position` is in [x, y, z] order"""
         center = self.get_center_position()
 
         # TODO - This 0.5 value is only a placeholder, if we want to do this correctly,

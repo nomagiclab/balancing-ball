@@ -18,7 +18,7 @@ N_PREDICT = 50
 
 predicter = PolynomialPredicter()
 tracker = ConcurrentPredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter, 3
+    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter, 0.05
 )
 pid_performer = PidPerformer(p, tracker, paddle)
 

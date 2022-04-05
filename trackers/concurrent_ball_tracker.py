@@ -7,7 +7,7 @@ from ball.delayed_pybullet_ball import DelayedPybulletBall
 from paddle.paddle import Paddle
 from position_prediction.abc_predicter import ABCPredicter
 from trackers.abstract_tracker import OutOfRange, AbstractBallTracker
-from utils.repeated_timer import RepeatedTimer
+from utils.non_blocking_put_queue import NonBlockingPutQueue
 
 
 class ConcurrentPredictingBallTracker(AbstractBallTracker):
@@ -19,7 +19,7 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
             predicter: ABCPredicter,
             fetch_time: float,
     ):
-        self.last_position = queue.Queue(maxsize=1)
+        self.last_position = NonBlockingPutQueue(maxsize=1)
         self.ball = ball
         self.paddle = paddle
         self.m_queue = deque(maxlen=n_predict)
@@ -28,7 +28,7 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         self.get_position_in_loop()
 
     def get_position_in_loop(self):
-        self.last_position.put_nowait(self.ball.get_position())
+        self.last_position.put(self.ball.get_position())
         threading.Timer(self.fetch_time, self.get_position_in_loop).start()
 
     def __get_error_from_position(self, ball_pos: List[float]):
@@ -42,7 +42,6 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
             raise OutOfRange
 
     def get_error_vector(self) -> List[float]:
-        print("siema")
         ball_pos: List[float]
         try:
             ball_pos = self.last_position.get_nowait()

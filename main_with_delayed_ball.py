@@ -4,6 +4,7 @@ import pybullet as p
 
 from ball.delayed_pybullet_ball import DelayedPybulletBall
 from position_prediction.polynomial_interpolation import PolynomialPredicter
+from trackers.concurrent_ball_tracker import ConcurrentPredictingBallTracker
 from trackers.predicting_ball_tracker import PredictingBallTracker
 from utils.environment import init_env_and_load_assets, update_wind_controllers
 from utils.pid_performer import PidPerformer
@@ -13,11 +14,11 @@ ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 paddle.create_joint_controllers()
 
 N_DELAYED = 30
-N_PREDICT = 10
+N_PREDICT = 50
 
 predicter = PolynomialPredicter()
-tracker = PredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter
+tracker = ConcurrentPredictingBallTracker(
+    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter, 3
 )
 pid_performer = PidPerformer(p, tracker, paddle)
 

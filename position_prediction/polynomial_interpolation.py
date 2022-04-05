@@ -3,8 +3,10 @@ from typing import Tuple, List
 from scipy import interpolate
 import numpy as np
 
+from position_prediction.abc_predicter import ABCPredicter
 
-class PolynomialPredicter:
+
+class PolynomialPredicter(ABCPredicter):
     def predict(self, positions: List[float]) -> float:
         n = len(positions)
         if n == 1:

@@ -12,8 +12,8 @@ ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 
 paddle.create_joint_controllers()
 
-N_DELAYED = 3
-N_PREDICT = 3
+N_DELAYED = 30
+N_PREDICT = 10
 
 predicter = PolynomialPredicter()
 tracker = PredictingBallTracker(

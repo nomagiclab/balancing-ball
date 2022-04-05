@@ -30,7 +30,7 @@ class Plotter:
         plt.tight_layout()
 
     def start(self):
-        ani = FuncAnimation(plt.gcf(), self.update_plot)
+        FuncAnimation(plt.gcf(), self.update_plot)
 
         plt.tight_layout()
         plt.show()

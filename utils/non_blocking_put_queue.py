@@ -2,6 +2,7 @@ from time import monotonic as time
 from queue import Queue
 from collections import deque
 
+
 class NonBlockingPutQueue(Queue):
     def put(self, item, block=True, timeout=None):
         with self.not_full:

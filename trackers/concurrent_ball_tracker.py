@@ -60,7 +60,7 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
             ball_pos = self.last_position.get_nowait()
             self.m_queue.append(ball_pos)
         except queue.Empty:
-            self.__last_predicted_pos = list(self.predicter.predict_x_y(list(self.m_queue)))
+            self.__last_predicted_pos = list(self.predicter.predict_x_y(list(self.m_queue), self.prediction_index))
             ball_pos = self.__last_predicted_pos
 
         return self.__get_error_from_position(ball_pos)

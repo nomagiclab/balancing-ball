@@ -15,7 +15,7 @@ N_PREDICT = 20
 
 predicter = PolynomialPredicter()
 tracker = ConcurrentPredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, predicter, 0.05
+    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, 0, predicter, 0.05
 )
 
 file_name = "polynomial_prediction_benchmark.csv"

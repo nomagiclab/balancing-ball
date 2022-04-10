@@ -1,9 +1,6 @@
-from ball.abc_ball import ABCBall
-from paddle.paddle import Paddle
 from pid.pid_balancer import OUT_OF_RANGE, PIDBalancer
 from paddle.abc_paddle import ABCPaddle
 from trackers.abstract_tracker import AbstractBallTracker
-from trackers.ball_tracker import BallTracker
 from utils.environment import init_standard_pid_tools
 import pybullet
 
@@ -13,7 +10,7 @@ class PidPerformer:
         self,
         pybullet_client: pybullet,
         ball_tracker: AbstractBallTracker,
-        paddle: Paddle,
+        paddle: ABCPaddle,
     ):
         self.pybullet_client = pybullet_client
         self.pid_sliders, self.pid_button, pid_controller = init_standard_pid_tools(
@@ -30,7 +27,7 @@ class PidPerformer:
         if desired_angles == OUT_OF_RANGE:
             self.paddle.reset_torque_pos()
         else:
-            y_desired_angle, x_desired_angle = self.pid_balancer.calculate_next_angle()
+            y_desired_angle, x_desired_angle = desired_angles
             # The y rotation direction is inverted,
             self.paddle.set_angles(x_desired_angle, -y_desired_angle)
             # so we have to take the negative value.

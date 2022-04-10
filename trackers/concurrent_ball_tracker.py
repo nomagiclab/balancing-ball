@@ -26,6 +26,17 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         self.predicter = predicter
         self.fetch_time = fetch_time
         self.get_position_in_loop()
+        self.__last_predicted_pos = None
+
+    @property
+    def last_predicted_pos(self):
+        return self.__last_predicted_pos
+
+    @last_predicted_pos.getter
+    def last_predicted_pos(self):
+        res = self.__last_predicted_pos
+        self.__last_predicted_pos = None
+        return res
 
     def get_position_in_loop(self):
         self.last_position.put(self.ball.get_position())
@@ -47,7 +58,8 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
             ball_pos = self.last_position.get_nowait()
             self.m_queue.append(ball_pos)
         except queue.Empty:
-            ball_pos = list(self.predicter.predict_x_y(list(self.m_queue)))
+            self.__last_predicted_pos = list(self.predicter.predict_x_y(list(self.m_queue)))
+            ball_pos = self.__last_predicted_pos
 
         return self.__get_error_from_position(ball_pos)
 

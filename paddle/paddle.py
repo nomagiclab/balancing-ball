@@ -134,7 +134,7 @@ class Paddle(ABCPaddle):
 
         # TODO - This 0.5 value is only a placeholder, if we want to do this correctly,
         # then we will have to take the paddle angles into account.
-        return abs(position[0] - center[0]) < 0.5 and abs(position[1] - center[1]) < 0.5
+        return abs(position[0] - center[0]) < 0.25 and abs(position[1] - center[1]) < 0.25
 
     def steer_with_keyboard(self, rotation_speed, x_steering=[0], y_steering=[0]):
         p = self.pybullet_client

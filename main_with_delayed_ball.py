@@ -22,7 +22,6 @@ tracker = ConcurrentPredictingBallTracker(
 )
 pid_performer = PidPerformer(p, tracker, paddle)
 
-
 while True:
     paddle.read_and_update_joint_position()
 
@@ -30,6 +29,7 @@ while True:
 
     ball_controller.check_and_update_rotation()
     ball_controller.check_if_drop_with_rotation()
+
     if ball_controller.should_throw_ball():
         ball_controller.throw_ball(paddle.get_center_position())
 

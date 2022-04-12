@@ -4,6 +4,7 @@ import time
 
 import pybullet as p
 
+from trackers.ball_tracker import BallTracker
 from utils.environment import init_env_and_load_assets, update_wind_controllers
 from utils.pid_performer import PidPerformer
 
@@ -31,7 +32,7 @@ else:
     paddle.create_joint_controllers()
 
 if pid_flag:
-    pid_performer = PidPerformer(p, ball, paddle)
+    pid_performer = PidPerformer(p, BallTracker(ball, paddle), paddle)
 
 
 while True:

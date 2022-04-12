@@ -3,14 +3,10 @@ from typing import Tuple, Dict
 import pybullet
 import pybullet_data
 
-from ball.abc_ball import ABCBall
 from ball.pybullet_ball import PyBulletBall
 from ball.pybullet_ball_controller import PyBulletBallController
-from pid.pid_balancer import PIDBalancer
 from pid.pid_controller import PIDController
-from paddle.abc_paddle import ABCPaddle
 from paddle.paddle import Paddle
-from trackers.ball_tracker import BallTracker
 from utils.button import Button
 
 G = 9.81
@@ -35,11 +31,15 @@ def init_wind_controllers(p):
     return wind_x_controller, wind_y_controller
 
 
+def set_wind(p, wind_x_value, wind_y_value):
+    p.setGravity(wind_x_value, wind_y_value, -G)
+
+
 def update_wind_controllers(p, wind_x_controller, wind_y_controller):
     wind_x = p.readUserDebugParameter(wind_x_controller)
     wind_y = p.readUserDebugParameter(wind_y_controller)
 
-    p.setGravity(wind_x, wind_y, -G)
+    set_wind(p, wind_x, wind_y)
 
 
 def load_plane(p):
@@ -72,15 +72,13 @@ def load_paddle(p):
 
 
 def init_standard_pid_tools(
-    p: pybullet, ball: ABCBall, paddle: ABCPaddle, max_angle: float, min_angle: float
-) -> Tuple[Dict[str, float], Button, PIDBalancer]:
-    kp_slider = p.addUserDebugParameter("P", 0, 500, 60)
+    p: pybullet, max_angle: float, min_angle: float
+) -> Tuple[Dict[str, float], Button, PIDController]:
+    kp_slider = p.addUserDebugParameter("P", 0, 500, 100)
     ki_slider = p.addUserDebugParameter("I", 0, 50, 1)
-    kd_slider = p.addUserDebugParameter("D", 0, 6000, 50)
+    kd_slider = p.addUserDebugParameter("D", 0, 6000, 300)
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
-
-    engine_tracker = BallTracker(ball, paddle)
 
     pid_controller = PIDController(
         p.readUserDebugParameter(kp_slider),
@@ -90,14 +88,16 @@ def init_standard_pid_tools(
         min_angle,
     )
 
-    balancer = PIDBalancer(engine_tracker, pid_controller)
-
-    return {"kp": kp_slider, "ki": ki_slider, "kd": kd_slider}, set_pid_button, balancer
+    return (
+        {"kp": kp_slider, "ki": ki_slider, "kd": kd_slider},
+        set_pid_button,
+        pid_controller,
+    )
 
 
 def init_env_and_load_assets(
     p,
-) -> Tuple[PyBulletBallController, ABCBall, Paddle, Tuple[int, int]]:
+) -> Tuple[PyBulletBallController, PyBulletBall, Paddle, Tuple[int, int]]:
     init_environment(p)
     wind_controllers = init_wind_controllers(p)
     load_plane(p)

@@ -39,7 +39,6 @@ class Robot:
         lookahead_time=0.1,
         gain=300,
     ):
-        # TODO use servoL or servoC?
         # Speed and acceleration are ignored in current version of ur_rtde.
         self.rtde_c.servoL(
             tool_position,

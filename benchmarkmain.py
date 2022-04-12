@@ -10,17 +10,19 @@ ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 
 paddle.create_joint_controllers()
 
-N_DELAYED = 3
-N_PREDICT = 20
+N_DELAYED = 0
+N_PREDICT = 1
 
 predicter = PolynomialPredicter()
 tracker = ConcurrentPredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, 0, predicter, 0.05
+    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, 0, predicter, 0.0001
 )
 
-file_name = "polynomial_prediction_benchmark.csv"
+FILE_NAME = "polynomial_prediction_benchmark"
+file_name = FILE_NAME + ".csv"
+plot_name = FILE_NAME + ".png"
 
-benchmark = Benchmark(tracker, ball, file_name)
-benchmark.run_benchmark(p, paddle)
+benchmark = Benchmark(tracker, ball, file_name, [(1.5, 1.5), (-1.5, -1.5)])
+benchmark.run_benchmark(p, paddle, 6)
 
-benchmark.plot_linear(file_name)
+benchmark.plot_linear(file_name, plot_name)

@@ -19,7 +19,6 @@ class PidPerformer:
         self.pid_balancer = PIDBalancer(ball_tracker, pid_controller)
 
         self.paddle = paddle
-        self.pid_balancer.controller.debug = False
 
     def perform_pid_step(self):
         desired_angles = self.pid_balancer.calculate_next_angle()

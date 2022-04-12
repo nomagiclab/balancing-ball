@@ -42,7 +42,10 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
 
     def get_position_in_loop(self):
         self.last_position.put(self.ball.get_position())
-        threading.Timer(self.fetch_time, self.get_position_in_loop).start()
+
+        ball_thread = threading.Timer(self.fetch_time, self.get_position_in_loop)
+        ball_thread.daemon = True
+        ball_thread.start()
 
     def __get_error_from_position(self, ball_pos: List[float]):
         if self.paddle.check_if_in_range(ball_pos):
@@ -60,7 +63,9 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
             ball_pos = self.last_position.get_nowait()
             self.m_queue.append(ball_pos)
         except queue.Empty:
-            self.__last_predicted_pos = list(self.predicter.predict_x_y(list(self.m_queue), self.prediction_index))
+            self.__last_predicted_pos = list(
+                self.predicter.predict_x_y(list(self.m_queue), self.prediction_index)
+            )
             ball_pos = self.__last_predicted_pos
 
         return self.__get_error_from_position(ball_pos)

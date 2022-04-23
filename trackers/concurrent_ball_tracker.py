@@ -25,6 +25,8 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         self.paddle = paddle
         self.prediction_index = prediction_index
         self.m_queue = deque(maxlen=n_predict)
+        self.discarded_queue = deque()
+        self.predicted_on_q = 0
         self.predicter = predicter
         self.fetch_time = fetch_time
         self.get_position_in_loop()
@@ -61,14 +63,46 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         ball_pos: List[float]
         try:
             ball_pos = self.last_position.get_nowait()
-            self.m_queue.append(ball_pos)
+            # Remove all the predicted values from the queue.
+            if len(self.discarded_queue) > 0:
+                for _ in range(self.predicted_on_q):
+                    self.m_queue.pop()
+                self.predicted_on_q = 0
+                # Restore all the discarded real values.
+                self.m_queue.extendleft(self.discarded_queue)
+                self.discarded_queue.clear()
+
         except queue.Empty:
             self.__last_predicted_pos = list(
                 self.predicter.predict_x_y(list(self.m_queue), self.prediction_index)
             )
             ball_pos = self.__last_predicted_pos
 
+            self.predicted_on_q += 1
+            # If the queue is full, save the oldest value so we can restore it later.
+            if len(self.m_queue) == self.m_queue.maxlen:
+                self.discarded_queue.appendleft(self.m_queue.popleft())
+
+        self.m_queue.append(ball_pos)
+
         return self.__get_error_from_position(ball_pos)
 
     def get_ball_position(self) -> List[float]:
         return self.ball.get_position()
+
+
+class ConcurrentPredictingBallTrackerNoDiscard(ConcurrentPredictingBallTracker):
+    def get_error_vector(self) -> List[float]:
+        ball_pos: List[float]
+        try:
+            ball_pos = self.last_position.get_nowait()
+
+        except queue.Empty:
+            self.__last_predicted_pos = list(
+                self.predicter.predict_x_y(list(self.m_queue), self.prediction_index)
+            )
+            ball_pos = self.__last_predicted_pos
+
+        self.m_queue.append(ball_pos)
+
+        return self.__get_error_from_position(ball_pos)

@@ -4,6 +4,7 @@ import time
 
 import pybullet as p
 
+from position_prediction.physical_prediction import PhysicalPrediction
 from trackers.ball_tracker import BallTracker
 from utils.environment import (
     init_env_and_load_assets,
@@ -62,6 +63,10 @@ while True:
     update_wind_controllers(p, *wind_controllers)
     update_force_controllers(p, ball, *force_controllers)
 
+    print(PhysicalPrediction().calculate_acceleration(paddle))
+
     p.stepSimulation()
 
     time.sleep(0.01)  # sometimes pybullet crashes, this line helps a lot
+
+    # [597.7266677411063, -916.5698238987555, 3459.2698871845996]

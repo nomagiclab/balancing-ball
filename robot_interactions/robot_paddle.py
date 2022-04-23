@@ -10,6 +10,10 @@ from robot_interactions.robot_steering import Robot
 
 
 class RobotPaddle(ABCPaddle):
+    # TODO
+    def get_angles(self) -> List[float]:
+        raise NotImplementedError
+
     MOVE_AXIS_INDEXES = {"x": 0, "y": 1, "z": 2}
     ROTATE_AXIS_INDEXES = {"x": 3, "y": 4, "z": 5}
 

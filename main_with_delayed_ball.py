@@ -16,7 +16,7 @@ paddle.create_joint_controllers()
 N_DELAYED = 10
 N_PREDICT = 15
 
-predicter = PolynomialPredicter(N_DELAYED)
+predicter = PolynomialPredicter(N_PREDICT)
 tracker = ConcurrentPredictingBallTracker(ball, paddle, predicter, 0.05)
 pid_performer = PidPerformer(p, tracker, paddle)
 

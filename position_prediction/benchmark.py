@@ -1,15 +1,13 @@
 import csv
-import math
 import time
 from datetime import date
 
 import pandas
 import pybullet
 
-from paddle.abc_paddle import ABCPaddle
+from ball.pybullet_ball import PyBulletBall
 from paddle.paddle import Paddle
 from trackers.abstract_tracker import AbstractBallTracker
-from ball.pybullet_ball import PyBulletBall
 from utils.environment import set_wind
 from utils.pid_performer import PidPerformer
 
@@ -123,7 +121,7 @@ class Benchmark:
 
         data = pandas.read_csv(csv_file_name)
         fig, axs = plt.subplots(3)
-        fig.suptitle("Vertically stacked subplots")
+        fig.suptitle("Prediction errors")
         fig.tight_layout()
 
         axs[0].set_title("Error x")

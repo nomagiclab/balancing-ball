@@ -15,16 +15,12 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         self,
         ball: ABCBall,
         paddle: Paddle,
-        n_predict: int,
-        prediction_index: int,
         predicter: ABCPredicter,
         fetch_time: float,
     ):
         self.last_position = NonBlockingPutQueue(maxsize=1)
         self.ball = ball
         self.paddle = paddle
-        self.prediction_index = prediction_index
-        self.m_queue = deque(maxlen=n_predict)
         self.predicter = predicter
         self.fetch_time = fetch_time
         self.get_position_in_loop()
@@ -61,11 +57,9 @@ class ConcurrentPredictingBallTracker(AbstractBallTracker):
         ball_pos: List[float]
         try:
             ball_pos = self.last_position.get_nowait()
-            self.m_queue.append(ball_pos)
+            self.predicter.add_position(ball_pos)
         except queue.Empty:
-            self.__last_predicted_pos = list(
-                self.predicter.predict_x_y(list(self.m_queue), self.prediction_index)
-            )
+            self.__last_predicted_pos = self.predicter.next_position()
             ball_pos = self.__last_predicted_pos
 
         return self.__get_error_from_position(ball_pos)

@@ -4,7 +4,9 @@ from typing import Tuple, List
 
 class ABCPredicter(ABC):
     @abstractmethod
-    def predict_x_y(
-        self, positions: List[Tuple[float, float, float]], position_index: int
-    ) -> Tuple[float, float, float]:
+    def add_position(self, position: List[float]):
+        pass
+
+    @abstractmethod
+    def next_position(self) -> List[float]:
         pass

@@ -1,3 +1,4 @@
+from collections import deque
 from typing import Tuple, List
 
 from scipy import interpolate
@@ -7,22 +8,26 @@ from position_prediction.abc_predicter import ABCPredicter
 
 
 class PolynomialPredicter(ABCPredicter):
-    def predict(self, positions: List[float], position_index: int) -> float:
+    def __init__(self, n_predict):
+        self.confirmed_positions = deque(maxlen=n_predict)
+
+    def add_position(self, position: List[float]):
+        self.confirmed_positions.append(position)
+
+    def next_position(self) -> List[float]:
+        a = list(zip(*self.confirmed_positions))
+        x_positions, y_positions, z_positions = a[0], a[1], a[2]
+        return [
+            self.predict(list(x_positions)),
+            self.predict(list(y_positions)),
+            self.predict(list(z_positions)),
+        ]
+
+    def predict(self, positions: List[float]) -> float:
         n = len(positions)
         if n == 1:
             return positions[0]
 
         time_series = np.arange(n)
         f = interpolate.interp1d(time_series, positions, fill_value="extrapolate")
-        return f(n + position_index)
-
-    def predict_x_y(
-        self, positions: List[Tuple[float, float, float]], position_index: int
-    ) -> Tuple[float, float, float]:
-        a = list(zip(*positions))
-        x_positions, y_positions, z_positions = a[0], a[1], a[2]
-        return (
-            self.predict(x_positions, position_index),
-            self.predict(y_positions, position_index),
-            self.predict(z_positions, position_index),
-        )
+        return f(n)

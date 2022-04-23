@@ -32,9 +32,9 @@ ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
 paddle.create_joint_controllers()
 
 
-predicter = PolynomialPredicter()
+predicter = PolynomialPredicter(N_PREDICT)
 tracker = ConcurrentPredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, N_PREDICT, 0, predicter, 0.1
+    DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, 0.1
 )
 
 file_name = args.file_name

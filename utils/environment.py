@@ -25,10 +25,23 @@ def init_environment(p):
 
 
 def init_wind_controllers(p):
-    wind_x_controller = p.addUserDebugParameter("Adjust the wind (x - axis)", -G, G, 0)
-    wind_y_controller = p.addUserDebugParameter("Adjust the wind (y - axis)", -G, G, 0)
+    wind_x_controller = p.addUserDebugParameter("Adjust the wind (x axis)", -G, G, 0)
+    wind_y_controller = p.addUserDebugParameter("Adjust the wind (y axis)", -G, G, 0)
 
     return wind_x_controller, wind_y_controller
+
+
+def init_force_controllers(p):
+    force_x_controller = p.addUserDebugParameter("force (x axis)", -1, 1, 0)
+    force_y_controller = p.addUserDebugParameter("force (y acis)", -1, 1, 0)
+    b = Button(p.addUserDebugParameter("Apply the force", 1, 0, 0))
+    return b, force_x_controller, force_y_controller
+
+
+def apply_force(p: pybullet, ball, force_x_controller, force_y_controller):
+    force_x = p.readUserDebugParameter(force_x_controller)
+    force_y = p.readUserDebugParameter(force_y_controller)
+    p.applyExternalForce(ball, -1, [force_x, force_y, 0], [0, 0, 0], p.WORLD_FRAME)
 
 
 def set_wind(p, wind_x_value, wind_y_value):
@@ -40,6 +53,13 @@ def update_wind_controllers(p, wind_x_controller, wind_y_controller):
     wind_y = p.readUserDebugParameter(wind_y_controller)
 
     set_wind(p, wind_x, wind_y)
+
+
+def update_force_controllers(
+    p, ball: PyBulletBall, button: Button, force_x_controller, force_y_controller
+):
+    if button.was_clicked():
+        apply_force(p, ball.id, force_x_controller, force_y_controller)
 
 
 def load_plane(p):
@@ -97,11 +117,19 @@ def init_standard_pid_tools(
 
 def init_env_and_load_assets(
     p,
-) -> Tuple[PyBulletBallController, PyBulletBall, Paddle, Tuple[int, int]]:
+) -> Tuple[
+    PyBulletBallController,
+    PyBulletBall,
+    Paddle,
+    Tuple[int, int],
+    Tuple[Button, int, int],
+]:
     init_environment(p)
     wind_controllers = init_wind_controllers(p)
+    force_controllers = init_force_controllers(p)
+
     load_plane(p)
     ball = PyBulletBall(p)
     ball_controller = PyBulletBallController(ball)
     paddle = load_paddle(p)
-    return ball_controller, ball, paddle, wind_controllers
+    return ball_controller, ball, paddle, wind_controllers, force_controllers

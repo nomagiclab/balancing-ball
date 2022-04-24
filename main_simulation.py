@@ -5,7 +5,11 @@ import time
 import pybullet as p
 
 from trackers.ball_tracker import BallTracker
-from utils.environment import init_env_and_load_assets, update_wind_controllers
+from utils.environment import (
+    init_env_and_load_assets,
+    update_wind_controllers,
+    update_force_controllers,
+)
 from utils.pid_performer import PidPerformer
 
 
@@ -22,7 +26,13 @@ def get_mode():
 mode, pid_flag = get_mode()
 keyboard_mode = mode == "keyboard"
 
-ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
+(
+    ball_controller,
+    ball,
+    paddle,
+    wind_controllers,
+    force_controllers,
+) = init_env_and_load_assets(p)
 
 if keyboard_mode:
     # add rotation speed controller
@@ -50,6 +60,7 @@ while True:
         ball_controller.throw_ball(paddle.get_center_position())
 
     update_wind_controllers(p, *wind_controllers)
+    update_force_controllers(p, ball, *force_controllers)
 
     p.stepSimulation()
 

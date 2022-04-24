@@ -3,10 +3,20 @@ from collections import deque
 import pybullet as p
 
 from trackers.ball_tracker import BallTracker
-from utils.environment import init_env_and_load_assets, update_wind_controllers
+from utils.environment import (
+    init_env_and_load_assets,
+    update_wind_controllers,
+    update_force_controllers,
+)
 from utils.pid_performer import PidPerformer
 
-ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
+(
+    ball_controller,
+    ball,
+    paddle,
+    wind_controllers,
+    force_controllers,
+) = init_env_and_load_assets(p)
 
 paddle.create_joint_controllers()
 pid_performer = PidPerformer(p, BallTracker(ball, paddle), paddle)
@@ -23,6 +33,7 @@ while True:
         ball_controller.throw_ball(paddle.get_center_position())
 
     update_wind_controllers(p, *wind_controllers)
+    update_force_controllers(p, ball, *force_controllers)
 
     p.stepSimulation()
 

@@ -28,7 +28,13 @@ args = parser.parse_args()
 N_DELAYED = args.d
 N_PREDICT = args.p
 
-ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
+(
+    ball_controller,
+    ball,
+    paddle,
+    wind_controllers,
+    force_controllers,
+) = init_env_and_load_assets(p)
 paddle.create_joint_controllers()
 
 

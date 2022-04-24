@@ -6,10 +6,20 @@ from ball.delayed_pybullet_ball import DelayedPybulletBall
 from position_prediction.polynomial_interpolation import PolynomialPredicter
 from trackers.concurrent_ball_tracker import ConcurrentPredictingBallTracker
 from trackers.predicting_ball_tracker import PredictingBallTracker
-from utils.environment import init_env_and_load_assets, update_wind_controllers
+from utils.environment import (
+    init_env_and_load_assets,
+    update_wind_controllers,
+    update_force_controllers,
+)
 from utils.pid_performer import PidPerformer
 
-ball_controller, ball, paddle, wind_controllers = init_env_and_load_assets(p)
+(
+    ball_controller,
+    ball,
+    paddle,
+    wind_controllers,
+    force_controllers,
+) = init_env_and_load_assets(p)
 
 paddle.create_joint_controllers()
 
@@ -32,6 +42,7 @@ while True:
         ball_controller.throw_ball(paddle.get_center_position())
 
     update_wind_controllers(p, *wind_controllers)
+    update_force_controllers(p, ball, *force_controllers)
 
     p.stepSimulation()
 

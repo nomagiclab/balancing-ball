@@ -43,3 +43,6 @@ class PyBulletBall(ABCBall):
 
     def get_position(self) -> List[float]:
         return self.pybullet_client.getBasePositionAndOrientation(self.id)[0]
+
+    def get_velocity(self) -> List[float]:
+        return self.pybullet_client.getBaseVelocity(self.id)[0]

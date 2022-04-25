@@ -75,7 +75,8 @@ class Paddle(ABCPaddle):
             self.robot_id,
             [self.ROTATE_AXIS_JOINTS[i] for i in ["x", "y", "z"]],
         )
-        return [state[0] for state in joint_states]
+        ret = [state[0] for state in joint_states]
+        return ret
 
     def set_angles(self, x_angle, y_angle):
         self.set_angle_on_axis("x", x_angle)

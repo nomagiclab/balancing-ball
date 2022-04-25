@@ -41,7 +41,9 @@ def init_force_controllers(p):
 def apply_force(p: pybullet, ball, force_x_controller, force_y_controller):
     force_x = p.readUserDebugParameter(force_x_controller)
     force_y = p.readUserDebugParameter(force_y_controller)
-    p.applyExternalForce(ball, -1, [force_x, force_y, 0], [0, 0, 0], p.WORLD_FRAME)
+    p.applyExternalForce(
+        ball, -1, [force_x, force_y, 0], [0.2, 0.2, 0.2], p.WORLD_FRAME
+    )
 
 
 def set_wind(p, wind_x_value, wind_y_value):

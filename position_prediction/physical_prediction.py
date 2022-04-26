@@ -41,9 +41,10 @@ class PlotMaker:
         plt.legend()
         plt.show()
 
-    def plot_subplots(self, subplots: int, labels: List[List[str]]):
-        fig, axs = plt.subplots(subplots)
-        for i in range(subplots):
+    def plot_subplots(self, labels: List[List[str]]):
+        n_subplots = len(labels)
+        fig, axs = plt.subplots(n_subplots)
+        for i in range(n_subplots):
             self.__plot(axs[i], labels[i])
         plt.show()
 
@@ -69,7 +70,7 @@ class PhysicalPredictier(ABCPredicter):
         self.certain_position_update_time = time.time()
 
         # Parameter for the running average.
-        self.ALPHA = 0.2
+        self.ALPHA = 0.01
 
     def next_position(self) -> List[float]:
         time_delta = time.time() - self.last_update
@@ -80,6 +81,7 @@ class PhysicalPredictier(ABCPredicter):
 
         new_velocity = self.new_velocity(self.curr_velocity, time_delta)
         print("The new velocity = ", new_velocity)
+        # self.curr_velocity = new_velocity
         self.debug_set_current_velocity(
             self.curr_velocity * self.ALPHA + (1 - self.ALPHA) * new_velocity
         )
@@ -133,5 +135,5 @@ class PhysicalPredictier(ABCPredicter):
 
     def debug_plot(self):
         self.debug_plotter.plot_subplots(
-            2, [["real_vel_x", "vel_x"], ["real_vel_y", "vel_y"]]
+            [["real_vel_x"], ["vel_x"], ["real_vel_y"], ["vel_y"]]
         )

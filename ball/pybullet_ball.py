@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from ball.abc_ball import ABCBall
 
@@ -35,6 +35,15 @@ class PyBulletBall(ABCBall):
         self.pybullet_client.resetBaseVelocity(
             self.id, angularVelocity=angular_velocity
         )
+    
+    def set_ball_velocity(self, linear_velocity, angular_velocity):
+        self.pybullet_client.resetBaseVelocity(
+            self.id, linearVelocity=linear_velocity, 
+            angularVelocity=angular_velocity
+        )
+        
+    def stabilize_ball(self):
+        self.set_ball_velocity([0, 0, 0], [0, 0, 0])
 
     def set_position(self, position, orientation):
         self.pybullet_client.resetBasePositionAndOrientation(
@@ -43,3 +52,10 @@ class PyBulletBall(ABCBall):
 
     def get_position(self) -> List[float]:
         return self.pybullet_client.getBasePositionAndOrientation(self.id)[0]
+
+    def get_orientation(self) -> List[float]:
+        return self.pybullet_client.getBasePositionAndOrientation(self.id)[1]
+    
+    def get_velocity(self) -> Tuple[List[float], List[float]]:
+        linear_velocity, angular_velocity = self.pybullet_client.getBaseVelocity(self.id)
+        return linear_velocity, angular_velocity

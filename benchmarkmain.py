@@ -11,11 +11,14 @@ from utils.environment import init_env_and_load_assets
 
 parser = argparse.ArgumentParser()
 DEFAULT_FILE_NAME = "polynomial_prediction_benchmark"
-DEFAULT_N_PREDICT = 20
-DEFAULT_FETCH_TIME = 1 / 10  # 10 is the maximum number of camera outputs per second.
 
-parser.add_argument("file_name", default=DEFAULT_FILE_NAME, type=str)
-parser.add_argument("-d", type=int, help="N_DELAYED parameter")
+DEFAULT_N_PREDICT = 10
+DEFAULT_FETCH_TIME = 1 / 20  # 20 is the maximum number of camera outputs per second.
+
+parser.add_argument("--file_name", default=DEFAULT_FILE_NAME, type=str)
+parser.add_argument(
+    "-d", type=int, help="N_DELAYED parameter", default=DEFAULT_N_PREDICT
+)
 parser.add_argument(
     "-p", type=int, help="N_PREDICT parameter", default=DEFAULT_N_PREDICT
 )
@@ -25,8 +28,10 @@ parser.add_argument(
 parser.add_argument("--delete", action="store_true")
 args = parser.parse_args()
 
+
 N_DELAYED = args.d
 N_PREDICT = args.p
+FETCH_TIME = args.f
 
 (
     ball_controller,
@@ -35,12 +40,13 @@ N_PREDICT = args.p
     wind_controllers,
     force_controllers,
 ) = init_env_and_load_assets(p)
-paddle.create_joint_controllers()
 
+paddle.create_joint_controllers()
 
 predicter = PolynomialPredicter(N_PREDICT)
 tracker = ConcurrentPredictingBallTracker(
-    DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, 0.1
+    DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, FETCH_TIME
+
 )
 
 file_name = args.file_name

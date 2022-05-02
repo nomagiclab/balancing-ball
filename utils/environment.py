@@ -134,6 +134,7 @@ def init_env_and_load_assets(
     paddle = load_paddle(p)
     return ball_controller, ball, paddle, wind_controllers, force_controllers
 
+
 def init_minimalistic_env_and_load_assets(
     p,
 ) -> Tuple[PyBulletBall, Paddle,]:

@@ -46,7 +46,6 @@ paddle.create_joint_controllers()
 predicter = PolynomialPredicter(N_PREDICT)
 tracker = ConcurrentPredictingBallTracker(
     DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, FETCH_TIME
-
 )
 
 file_name = args.file_name

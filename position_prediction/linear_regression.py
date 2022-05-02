@@ -18,7 +18,7 @@ class LinearRegressionPredicter(ABCPredicter):
     def next_position(self) -> List[float]:
         a = list(zip(*self.confirmed_positions))
         x_positions, y_positions, z_positions = a[0], a[1], a[2]
-        #print("ZWRACAM", self.predict(list(x_positions)))
+        # print("ZWRACAM", self.predict(list(x_positions)))
         return [
             self.predict(list(x_positions)),
             self.predict(list(y_positions)),

@@ -15,6 +15,8 @@ from utils.pid_performer import PidPerformer
 INITIAL_WAIT_TIME = 3.0
 DEFAULT_FETCH_TIME = 0.1
 RANDOM_EVENT_TIME = 0.2
+DEFAULT_TRIAL_NUM = 5
+
 
 parser = argparse.ArgumentParser(description="Mode manager")
 parser.add_argument("--pid", action="store_true")
@@ -22,13 +24,14 @@ parser.add_argument("--filename", action="store", type=str, default="gathered_da
 parser.add_argument("--fetch_time", action="store", type=float, default=DEFAULT_FETCH_TIME)
 parser.add_argument("--initial_wait_time", action="store", type=float, default=INITIAL_WAIT_TIME)
 parser.add_argument("--random_event_time", action="store", type=float, default=RANDOM_EVENT_TIME)
-
+parser.add_argument("--number_of_trials", action="store", type=int, default=DEFAULT_TRIAL_NUM)
 args = parser.parse_args()
 filename = args.filename
 pid_flag = args.pid
 fetch_time = args.fetch_time
 initial_wait_time = args.initial_wait_time
 random_event_time = args.random_event_time
+trial_num = args.number_of_trials
 
 (
     ball,
@@ -51,7 +54,7 @@ def distance_from_paddle_center(pos):
 def vector_norm(vec):
     return np.linalg.norm(np.asarray(vec), ord=2)
 
-trial_id = 1
+trial_id = 0
 df = pd.DataFrame(columns=["trial_id", 
                             "pos_x", "pos_y", "pos_z", 
                             "lin_x", "lin_y", "lin_z",
@@ -81,8 +84,7 @@ while True:
                 random_angular_velocity = np.random.uniform(low=-0.3, high=0.3, size=3).tolist()
                 random_linear_velocity = np.random.uniform(low=-0.7, high=0.7, size=3).tolist()
                 ball.set_ball_velocity(random_linear_velocity, random_angular_velocity)
-            else:
-                print("NIE")
+
             random_event_timer = time.time()
         
         if distance_from_paddle_center(ball.get_position()) > 0.4:
@@ -90,8 +92,13 @@ while True:
             ball.set_position([0, 0, 0.5 + 0.1], ball.get_orientation())
             #setting new trial id
             trial_id += 1
+            if trial_id == trial_num:
+                break
             #delaying random event occurence
             random_event_timer = time.time()
     p.stepSimulation()
 
     time.sleep(0.01)  # sometimes pybullet crashes, this line helps a lot
+
+df.to_csv(filename, sep=',')
+print("DATA GATHERED TO:", filename)

@@ -11,6 +11,7 @@ from utils.environment import init_env_and_load_assets
 
 parser = argparse.ArgumentParser()
 DEFAULT_FILE_NAME = "polynomial_prediction_benchmark"
+
 DEFAULT_N_PREDICT = 10
 DEFAULT_FETCH_TIME = 1 / 20  # 20 is the maximum number of camera outputs per second.
 
@@ -26,6 +27,7 @@ parser.add_argument(
 )
 parser.add_argument("--delete", action="store_true")
 args = parser.parse_args()
+
 
 N_DELAYED = args.d
 N_PREDICT = args.p

@@ -52,6 +52,12 @@ class Paddle(ABCPaddle):
             self.pybullet_client.addUserDebugParameter("x_roll", -3.14, 3.14, 0)
         )
 
+    def get_joint_rolls(self):
+        # (jointPosition, jointVelocity, jointReactionForces, appliedJointMotorTorque)
+        return tuple(
+            self.pybullet_client.getJointState(self.robot_id, i) for i in [3, 4, 5]
+        )
+
     def read_and_update_joint_position(self):
         for i in range(len(self.joint_controllers)):
             self.pybullet_client.setJointMotorControl2(

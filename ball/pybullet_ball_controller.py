@@ -1,8 +1,10 @@
 from typing import List
 
 from ball.pybullet_ball import PyBulletBall
+import ball.pybullet_ball as pybullet_ball
 from utils.button import Button
 from utils.physics import get_force_vector
+from paddle.paddle import PADDLE_RADIUS_M
 
 
 class PyBulletBallController:
@@ -13,26 +15,43 @@ class PyBulletBallController:
         self._set_rotation_sliders = [
             self.pybullet_client.addUserDebugParameter(
                 "Angular velocity x",
-                -ball.MAX_ANGULAR_VELOCITY,
-                ball.MAX_ANGULAR_VELOCITY,
+                -pybullet_ball.MAX_ANGULAR_VELOCITY,
+                pybullet_ball.MAX_ANGULAR_VELOCITY,
                 0,
             ),
             self.pybullet_client.addUserDebugParameter(
                 "Angular velocity y",
-                -ball.MAX_ANGULAR_VELOCITY,
-                ball.MAX_ANGULAR_VELOCITY,
+                -pybullet_ball.MAX_ANGULAR_VELOCITY,
+                pybullet_ball.MAX_ANGULAR_VELOCITY,
                 0,
             ),
             self.pybullet_client.addUserDebugParameter(
                 "Angular velocity z",
-                -ball.MAX_ANGULAR_VELOCITY,
-                ball.MAX_ANGULAR_VELOCITY,
+                -pybullet_ball.MAX_ANGULAR_VELOCITY,
+                pybullet_ball.MAX_ANGULAR_VELOCITY,
                 0,
             ),
         ]
 
+        self._set_initial_position_sliders = [
+            self.pybullet_client.addUserDebugParameter(
+                "position x",
+                -PADDLE_RADIUS_M,
+                PADDLE_RADIUS_M,
+                0,
+            ),
+            self.pybullet_client.addUserDebugParameter(
+                "position y",
+                -PADDLE_RADIUS_M,
+                PADDLE_RADIUS_M,
+                0,
+            ),
+        ]
         self._set_ball_height_slider = self.pybullet_client.addUserDebugParameter(
-            "Set initial ball height", 0, ball.MAX_HEIGHT, ball.DEFAULT_POSITION[2]
+            "Set initial ball height",
+            0,
+            pybullet_ball.MAX_HEIGHT,
+            pybullet_ball.DEFAULT_POSITION[2],
         )
         self._set_ball_height_button = Button(
             self.pybullet_client.addUserDebugParameter(
@@ -57,7 +76,13 @@ class PyBulletBallController:
             self._reset_ball_position(
                 self.pybullet_client.readUserDebugParameter(
                     self._set_ball_height_slider
-                )
+                ),
+                self.pybullet_client.readUserDebugParameter(
+                    self._set_initial_position_sliders[0]
+                ),
+                self.pybullet_client.readUserDebugParameter(
+                    self._set_initial_position_sliders[1]
+                ),
             )
             self._ball.set_ball_angular_velocity(
                 [
@@ -75,11 +100,17 @@ class PyBulletBallController:
                 ]
             )
 
-    def _reset_ball_position(self, height: float):
+    def _reset_ball_position(
+        self,
+        height: float,
+        x: float = pybullet_ball.DEFAULT_POSITION[0],
+        y: float = pybullet_ball.DEFAULT_POSITION[1],
+    ):
         self._ball.set_position(
-            [self._ball.DEFAULT_POSITION[0], self._ball.DEFAULT_POSITION[1], height],
-            self._ball.DEFAULT_ORIENTATION,
+            [x, y, height],
+            pybullet_ball.DEFAULT_ORIENTATION,
         )
+        self._ball.set_velocity([0, 0, 0])
 
     def should_throw_ball(self) -> bool:
         return self._throw_ball_button.was_clicked()

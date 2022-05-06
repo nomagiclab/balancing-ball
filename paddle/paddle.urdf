@@ -113,7 +113,7 @@
     <link name="pad">
         <visual>
             <geometry>
-                <cylinder length="0.01" radius="0.147"/>
+                <cylinder length="0.01" radius="0.085"/>
             </geometry>
             <material name="b">
                 <color rgba="1 0 0 1"/>
@@ -121,7 +121,7 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder length="0.01" radius="0.147"/>
+                <cylinder length="0.01" radius="0.085"/>
             </geometry>
         </collision>
     </link>

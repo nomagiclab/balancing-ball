@@ -15,16 +15,18 @@ class SingleVarPIDController:
         self.max_output = max_output
         self.min_output = min_output
 
+        self.p_error = 0
         self._derivative_calculator = DerivativeCalculator()
         self._integral_calculator = IntegralCalculator()
 
     def get_integral(self):
-        return self._integral_calculator.get_current_integral()
+        return self._integral_calculator.get_current_integral() * self.ki
 
     def get_derivative(self):
-        return self._derivative_calculator.get_current_derivative()
+        return self._derivative_calculator.get_current_derivative() * self.kd
 
     def compute(self, error: float, time: float):
+        self.p_error = self.kp * error
         error_integral = self._integral_calculator.get_and_update_integral(error, time)
         error_derivative = self._derivative_calculator.get_and_update_derivative(
             error, time

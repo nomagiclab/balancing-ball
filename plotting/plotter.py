@@ -16,12 +16,19 @@ class Plotter:
         data = [pd.read_csv(x) for x in self.csv_names]
 
         x_values = data[0]["Time"]
-        y_values = [d["input"] for d in data]
+        y_values = [#[d["input"] for d in data],
+                    [d["P_x"] for d in data],
+                    [d["I_x"] for d in data],
+                    [d["D_x"] for d in data]]
 
         plt.cla()
-
-        plt.plot(x_values, y_values[0])
-        plt.plot(x_values, y_values[1])
+        i = 0
+        l = ["P", "I", "D"]
+        colors = ['red', 'blue', 'green']
+        for y_values in y_values:
+            plt.plot(x_values, y_values[0], color=colors[i])
+            i += 1
+            #plt.plot(x_values, y_values[1])
 
         plt.xlabel("Time")
         plt.ylabel("Error")
@@ -30,7 +37,7 @@ class Plotter:
         plt.tight_layout()
 
     def start(self):
-        FuncAnimation(plt.gcf(), self.update_plot)
+        anim = FuncAnimation(plt.gcf(), self.update_plot)
 
         plt.tight_layout()
         plt.show()

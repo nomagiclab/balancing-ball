@@ -1,9 +1,10 @@
+import time
 from typing import Union, Tuple
 
 from trackers.abstract_tracker import AbstractBallTracker, OutOfRange
 from pid.pid_controller import PIDController
 
-OUT_OF_RANGE = -1
+OUT_OF_RANGE = (-1, -1)
 
 
 class PIDBalancer:
@@ -17,10 +18,17 @@ class PIDBalancer:
         self.controller = controller
         self.time_step = time_step
         self.current_time = 0
+        self.last_err = 0
 
-    def calculate_next_angle(self) -> Union[Tuple[float, float], int]:
+    def calculate_next_angle(self, real_time=False) -> Union[Tuple[float, float], int]:
         try:
             err = self.tracker.get_error_vector()
+
+            self.last_err = err
+
+            if real_time:
+                self.current_time = time.time()
+
             res = self.controller.compute(err, self.current_time)
 
             self.current_time += self.time_step

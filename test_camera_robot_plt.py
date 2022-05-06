@@ -11,12 +11,12 @@ IP_ADDRESS = "192.168.1.20"
 
 paddle = robot_paddle.RobotPaddle(IP_ADDRESS)
 
-P = 0.010
-I = 0.002
-D = 0.020
+P = 0.025
+I = 0.001
+D = 0.009
 
-tracker = RealsenseTracker(tuple(x / 2 for x in UsbRealsenseCamera.shape()), True)
-pid_controller = PIDController(P, I, D, 7, -7)
+tracker = RealsenseTracker((460, 400), True)
+pid_controller = PIDController(P, I, D, 10, -10)
 
 csv_writer_x = CsvWriter("x")
 csv_writer_y = CsvWriter("y")

@@ -1,3 +1,4 @@
+import timeit
 from typing import Tuple, List
 from src.vision.realsense import UsbRealsenseCamera
 from trackers.abstract_tracker import AbstractBallTracker, OutOfRange

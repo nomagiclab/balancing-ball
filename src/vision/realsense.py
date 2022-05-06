@@ -42,6 +42,9 @@ class UsbRealsenseCamera(AbstractCameraService):
         super().__init__()
         self.pipe = rs.pipeline()
         self.cfg = rs.config()
+        self.cfg.enable_stream(rs.stream.color, 640, 480, rs.format.rgb8, 30)
+        self.cfg.disable_stream(rs.stream.depth)
+
         self.profile = self.pipe.start(self.cfg)
 
         self.center_point = center_point
@@ -70,21 +73,13 @@ class UsbRealsenseCamera(AbstractCameraService):
         color_frame = frameset.get_color_frame()
 
         aligned_depth_frame = frameset.get_depth_frame()
-        return color_frame, aligned_depth_frame
+        return color_frame, None
 
     def raw_photo(self, colorized_depth=False):
-        color_frame, aligned_depth_frame = self.raw_realsense_photo()
+        color_frame, _ = self.raw_realsense_photo()
         color = np.asanyarray(color_frame.get_data())
-        if colorized_depth:
-            colorizer = rs.colorizer()
-            aligned_depth_frame = np.asanyarray(
-                colorizer.colorize(aligned_depth_frame).get_data()
-            )
-        else:
-            aligned_depth_frame = np.asanyarray(aligned_depth_frame.get_data())
-
-        depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
-        return color, aligned_depth_frame * depth_scale
+        # depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
+        return color, None
 
     def take_photo(self):
         color, depth = self.raw_photo(colorized_depth=False)

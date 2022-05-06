@@ -2,6 +2,8 @@ import math
 from typing import List
 from paddle.abc_paddle import ABCPaddle
 
+PADDLE_RADIUS_M = 0.17 / 2
+
 
 class Paddle(ABCPaddle):
     urdf_model = "paddle/paddle.urdf"

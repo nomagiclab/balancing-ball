@@ -32,7 +32,10 @@ class Timer:
     def summary(self):
         try:
             total_time = self.stop_time - self.start_time
-            times = [(name, [t[1] - t[0] for t in self.times[name]]) for name, t in self.times.items()]
+            times = [
+                (name, [t[1] - t[0] for t in self.times[name]])
+                for name, t in self.times.items()
+            ]
 
             mean_loop_time = 0.0
 
@@ -45,4 +48,6 @@ class Timer:
             print(f"Section mean times: {[(name, sum(l)/len(l)) for name, l in times]}")
             print(f"Total mean time: {mean_loop_time}")
         except:
-            print("This cant be!, probably records are incomplete, error occured during the summary.")
+            print(
+                "This cant be!, probably records are incomplete, error occured during the summary."
+            )

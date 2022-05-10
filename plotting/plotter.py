@@ -13,7 +13,7 @@ class Plotter:
         self.csv_names = csv_files
 
     def update_plot(self, *args, **kwargs):
-        data = [pd.read_csv(x) for x in self.csv_names]
+        data = [pd.read_csv(x) for x in self.csv_names][-50:]
 
         x_values = data[0]["Time"]
         y_values = [#[d["input"] for d in data],

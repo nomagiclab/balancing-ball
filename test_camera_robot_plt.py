@@ -11,13 +11,13 @@ IP_ADDRESS = "192.168.1.20"
 
 paddle = robot_paddle.RobotPaddle(IP_ADDRESS)
 
-P = 0.025
-I = 0.001
-D = 0.01
+P = 0.066
+I = 0.002
+D = 0.03
 
-tracker = RealsenseTracker((200, 266), True)
-pid_controller = PIDController(P, I, D, 13, -13)
+tracker = RealsenseTracker((200, 296), True)
 
+pid_controller = PIDController(P, I, D, 17, -17)
 csv_writer_x = CsvWriter("x")
 csv_writer_y = CsvWriter("y")
 
@@ -38,7 +38,7 @@ while True:
 
     print("ROLL, PITCH =", r, " --- ", p)
 
-    if abs(r) > 0.25 or abs(p) > 0.25:
+    if abs(r) > 0.30 or abs(p) > 0.30:
         input("PLEASE RECONSIDER!")
         continue
 

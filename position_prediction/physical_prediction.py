@@ -7,6 +7,7 @@ import numpy as np
 
 from ball.pybullet_ball import PyBulletBall
 from paddle.abc_paddle import ABCPaddle
+from plotting.plot_maker import PlotMaker
 from position_prediction.abc_predicter import ABCPredicter
 
 
@@ -22,31 +23,6 @@ def calculate_rotation(x_angle, y_angle):
     return np.array(
         [gravity_decomposition[0] * cos_x, gravity_decomposition[1] * cos_y]
     )
-
-
-class PlotMaker:
-    def __init__(self, labels: List[str]):
-        self.data = {label: ([], []) for label in labels}
-
-    def add(self, label, x, y):
-        self.data[label][0].append(x)
-        self.data[label][1].append(y)
-
-    def __plot(self, p, labels):
-        for label in labels:
-            p.plot(self.data[label][0], self.data[label][1], label=label)
-
-    def plot(self):
-        self.__plot(plt, self.data.keys())
-        plt.legend()
-        plt.show()
-
-    def plot_subplots(self, labels: List[List[str]]):
-        n_subplots = len(labels)
-        fig, axs = plt.subplots(n_subplots)
-        for i in range(n_subplots):
-            self.__plot(axs[i], labels[i])
-        plt.show()
 
 
 class PhysicalPredictier(ABCPredicter):

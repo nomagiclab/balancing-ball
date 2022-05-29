@@ -72,6 +72,14 @@ class Paddle(ABCPaddle):
             targetPosition=angle * math.pi / 180,
         )
 
+    def get_angles(self) -> List[float]:
+        joint_states = self.pybullet_client.getJointStates(
+            self.robot_id,
+            [self.ROTATE_AXIS_JOINTS[i] for i in ["x", "y", "z"]],
+        )
+        ret = [state[0] for state in joint_states]
+        return ret
+
     def set_angles(self, x_angle, y_angle):
         self.set_angle_on_axis("x", x_angle)
         self.set_angle_on_axis("y", y_angle)

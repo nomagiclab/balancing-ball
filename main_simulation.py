@@ -4,6 +4,7 @@ import time
 
 import pybullet as p
 
+from position_prediction.physical_prediction import PhysicalPredictier
 from trackers.ball_tracker import BallTracker
 from utils.environment import (
     init_env_and_load_assets,
@@ -44,12 +45,28 @@ else:
 if pid_flag:
     pid_performer = PidPerformer(p, BallTracker(ball, paddle), paddle)
 
+predicter = PhysicalPredictier(ball, paddle)
 
-while True:
+
+p.setTimeStep(0.01)
+
+
+for _ in range(1000):
+
+    start_time = time.time()
+    if not paddle.check_if_in_range(ball.get_position()):
+        break
+
     if keyboard_mode:
         paddle.steer_with_keyboard(p.readUserDebugParameter(rotation_speed_id))
     else:
         paddle.read_and_update_joint_position()
+
+    print("Adding position", ball.get_position()[:2])
+    predicter.add_position(ball.get_position())
+    print("\nNEXT POSITION PREDICTION")
+    print("predicted = ", predicter.next_position())
+    print("---------------------------------------------")
 
     if pid_flag:
         pid_performer.perform_pid_step()
@@ -64,4 +81,13 @@ while True:
 
     p.stepSimulation()
 
-    time.sleep(0.01)  # sometimes pybullet crashes, this line helps a lot
+    # TODO ten sleep powinien być długości częstotliwości symulacji.
+    # stepSimulation will perform all the actions in a single forward dynamics
+    # simulation step such as collision detection, constraint solving and integration.
+    # The default timestep is 1/240 second, it can be changed using the setTimeStep or setPhysicsEngineParameter API.
+    time.sleep(max(0, 0.01 - (time.time() - start_time)))
+    # sometimes pybullet crashes, this line helps a lot
+
+    # [597.7266677411063, -916.5698238987555, 3459.2698871845996]
+
+predicter.debug_plot()

@@ -17,10 +17,13 @@ class BallTracker(AbstractBallTracker):
         ball_pos = self.ball.get_position()
         if self.paddle.check_if_in_range(ball_pos):
             paddle_pos = self.paddle.get_center_position()
-            return [
-                ball_pos - paddle_pos
+            error_vec = [
+                (ball_pos - paddle_pos) * 100
                 for ball_pos, paddle_pos in zip(ball_pos, paddle_pos)
             ][:2]
+            percentage_error = [x / y for x, y in zip(error_vec, [17/2, 15/2])]
+
+            return percentage_error
         else:
             raise OutOfRange
 

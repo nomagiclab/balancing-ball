@@ -96,9 +96,9 @@ def load_paddle(p):
 def init_standard_pid_tools(
     p: pybullet, max_angle: float, min_angle: float
 ) -> Tuple[Dict[str, float], Button, PIDController]:
-    kp_slider = p.addUserDebugParameter("P", 0, 500, 100)
-    ki_slider = p.addUserDebugParameter("I", 0, 50, 1)
-    kd_slider = p.addUserDebugParameter("D", 0, 6000, 300)
+    kp_slider = p.addUserDebugParameter("P", 0, 500, 66)
+    ki_slider = p.addUserDebugParameter("I", 0, 50, 0.5)
+    kd_slider = p.addUserDebugParameter("D", 0, 6000, 23)
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
 

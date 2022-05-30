@@ -21,7 +21,11 @@ class PlotMaker:
         plt.show()
 
     def plot_subplots(
-        self, labels: List[List[str]], title = None, titles: List[str] = None, ylabels: List[str] = None
+        self,
+        labels: List[List[str]],
+        title=None,
+        titles: List[str] = None,
+        ylabels: List[str] = None,
     ):
         n_subplots = len(labels)
         fig, axs = plt.subplots(n_subplots)

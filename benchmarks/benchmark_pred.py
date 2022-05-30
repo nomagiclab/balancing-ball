@@ -11,6 +11,8 @@ from paddle.paddle import Paddle
 from trackers.abstract_tracker import AbstractBallTracker
 from utils.environment import set_wind
 from utils.pid_performer import PidPerformer
+import matplotlib as plt
+from typing import List
 
 
 def _perform_sim_step(p: pybullet, paddle, pid_performer: PidPerformer):
@@ -126,7 +128,10 @@ class Benchmark:
         time_left = self.INITIAL_WAIT_TIME
         last_time = time.time()
 
+        PYBULLET_TIME_STEP = 1 / 100
+
         while True:
+            start_time = time.time()
             if not paddle.check_if_in_range(self.ball.get_position()):
                 print("Benchmark failed, ball out of range!")
                 self.print_results()
@@ -148,6 +153,9 @@ class Benchmark:
 
             time_left -= time.time() - last_time
             last_time = time.time()
+
+            pybullet_client.stepSimulation()
+            time.sleep(PYBULLET_TIME_STEP - (time.time() - start_time))
 
         self.csv_file.close()
 

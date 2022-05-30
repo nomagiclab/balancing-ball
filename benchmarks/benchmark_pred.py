@@ -47,7 +47,7 @@ class Benchmark:
 
         if csv_file_name is None:
             csv_file_name = "benchmark" + date.today().strftime("%b-%d-%Y") + ".csv"
-        
+
         self.csv_file_name = csv_file_name
         self.csv_file = open(self.csv_file_name, "w")
         self.csv_writer = csv.writer(self.csv_file)
@@ -67,7 +67,7 @@ class Benchmark:
         time_left = self.INITIAL_WAIT_TIME
         last_time = time.time()
 
-        PYBULLET_TIME_STEP = 1 / 100 
+        PYBULLET_TIME_STEP = 1 / 100
 
         while True:
             start_time = time.time()

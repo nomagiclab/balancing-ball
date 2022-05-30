@@ -21,18 +21,18 @@ class RobotPaddle(ABCPaddle):
         0.7515497250864069,
         -0.1073135360489473,
         0.16513409510172675,
-        -0.009236061555885475,
-        1.5514308949914648,
-        0.06449220849435575,
+        0,
+        math.pi / 2,
+        0,
     ]
 
     INITIAL_Q = [
-        0.01856282353401184,
-        -1.725330492059225,
-        -2.404684543609619,
-        -2.1323920689024867,
-        -1.5921157042132776,
-        4.754701137542725,
+        0.09651857614517212,
+        -1.68324675182485,
+        -2.416034460067749,
+        -2.1836868725218714,
+        -1.4677618185626429,
+        4.719606876373291
     ]
 
     def __init__(
@@ -59,6 +59,31 @@ class RobotPaddle(ABCPaddle):
         )
 
     def set_angles_rp(self, roll, pitch):
+        rotation_matrix = self.__create_givens(math.radians(-90))
+        # rotation_wrt_base, _ = Rodrigues(np.array(initial_pose[3:]))
+
+        rpy = [0, 0, 0]
+        rpy[1] = pitch
+        rpy[2] = -roll
+
+        # Osie
+        # Obrót o z to tak naprawdę obrót o x
+        rmat = R.from_euler("xyz", rpy).as_matrix()
+        rmat = rotation_matrix.dot(rmat)
+
+        rvec, _ = Rodrigues(rmat)
+        rvec = [rvec[0], -rvec[1], -rvec[2]]
+
+        pose = self.initial_pose.copy()
+        pose[3:] = rvec
+
+        # p = self.robot.rtde_c.getInverseKinematics(pose)
+        # print("POSITIONS", pose, self.set_angles_rp_test(roll, pitch))
+
+        self.robot.servoL(pose)
+        # return pose
+
+    def set_angles_rp_test(self, roll, pitch):
         rotation_matrix = self.__create_givens(math.radians(-90))
 
         joint_angles = np.array(
@@ -91,8 +116,9 @@ class RobotPaddle(ABCPaddle):
         # Calculate the IK solution, for the new pose.
         p = self.robot.rtde_c.getInverseKinematics(pose)
 
+        return pose
         # Move the robot to the new pose.
-        self.robot.servoJ(p)
+        # self.robot.servoJ(p)
 
     def set_angles(self, x_angle: float, y_angle: float):
         self.set_angles_rp(x_angle, y_angle)

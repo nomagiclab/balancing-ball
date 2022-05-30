@@ -152,6 +152,38 @@ class Benchmark:
         self.csv_file.close()
 
     @staticmethod
+    def plot_PID(csv_file_name: str, plot_filename: str):
+        from matplotlib import pyplot as plt
+        data = pandas.read_csv(csv_file_name)
+        fig, axs = plt.subplots(2)
+        fig.set_tight_layout(True)
+
+        axs[0].set_title("X axis PID values")
+        axs[0].plot(
+            data["Time"], data["P_x"], label="P", color="red"
+        )
+        axs[0].plot(
+            data["Time"], data["D_x"], label="D", color="green"
+        )
+        axs[0].plot(
+            data["Time"], data["I_x"], label="I", color="orange"
+        )
+
+        axs[1].set_title("Y axis PID values")
+        axs[1].plot(
+            data["Time"], data["P_y"], label="P", color="red"
+        )
+        axs[1].plot(
+            data["Time"], data["D_y"], label="D", color="green"
+        )
+        axs[1].plot(
+            data["Time"], data["I_y"], label="I", color="orange"
+        )
+        axs[0].legend()
+        axs[1].legend()
+        plt.savefig(plot_filename)
+
+    @staticmethod
     def plot_error(csv_file_name: str, plot_filename: str):
         from matplotlib import pyplot as plt
         data = pandas.read_csv(csv_file_name)
@@ -166,6 +198,24 @@ class Benchmark:
         axs[1].set_title("Error on y axis")
         axs[1].plot(
             data["Frame"], data["Y"], label="Y", color="green"
+        )
+        plt.savefig(plot_filename)
+
+    @staticmethod
+    def plot_error2(csv_file_name: str, plot_filename: str):
+        from matplotlib import pyplot as plt
+        data = pandas.read_csv(csv_file_name)
+        fig, axs = plt.subplots(2)
+        fig.suptitle("Ball positions")
+        fig.tight_layout()
+
+        axs[0].set_title("Error on x axis")
+        axs[0].plot(
+            data["Time"], data["err_x"], label="X", color="red"
+        )
+        axs[1].set_title("Error on y axis")
+        axs[1].plot(
+            data["Time"], data["err_y"], label="Y", color="green"
         )
         plt.savefig(plot_filename)
 

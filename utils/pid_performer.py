@@ -14,7 +14,7 @@ class PidPerformer:
     ):
         self.pybullet_client = pybullet_client
         self.pid_sliders, self.pid_button, pid_controller = init_standard_pid_tools(
-            pybullet_client, 55, -55
+            pybullet_client, 30, -30
         )
         self.pid_balancer = PIDBalancer(ball_tracker, pid_controller)
 

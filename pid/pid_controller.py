@@ -1,16 +1,26 @@
+import csv
+import time
 from typing import Tuple, List
 
 from pid.single_variable_pid import SingleVarPIDController
 
 
 class PIDController:
-    debug = False
+    debug = True
 
     def __init__(
-        self, kp: float, ki: float, kd: float, max_output: float, min_output: float
+        self, kp: float, ki: float, kd: float, max_output: float, min_output: float, axis: str = ""
     ):
         self.x_controller = SingleVarPIDController(kp, ki, kd, max_output, min_output)
         self.y_controller = SingleVarPIDController(kp, ki, kd, max_output, min_output)
+
+        if self.debug:
+            self.file_name = f"plotting/data/pid.csv"
+            self.start_time = time.time()
+
+            with open(self.file_name, "w") as f:
+                fw = csv.writer(f)
+                fw.writerow(["Time", "P_x", "I_x", "D_x", "err_x", "P_y", "I_y", "D_y", "err_y"])
 
     def compute(
         self, current_error: List[float], current_time: float
@@ -20,6 +30,21 @@ class PIDController:
         output_y = self.y_controller.compute(current_error[1], current_time)
 
         if self.debug:
+            with open(self.file_name, "a") as f:
+                fw = csv.writer(f)
+                fw.writerow(
+                    [
+                        1000 * (time.time() - self.start_time),
+                        self.x_controller.p_error,
+                        self.x_controller.get_integral(),
+                        self.x_controller.get_derivative(),
+                        current_error[0],
+                        self.y_controller.p_error,
+                        self.y_controller.get_integral(),
+                        self.y_controller.get_derivative(),
+                        current_error[1]
+                    ]
+                )
             print(
                 "PID errors (P, I, D):",
                 current_error,

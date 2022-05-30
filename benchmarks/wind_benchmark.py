@@ -11,7 +11,7 @@ from utils.pid_performer import PidPerformer
 
 
 class Benchmark:
-    # Time it takes for ball_id to stabilize.
+    # Time it takes for ball to stabilize.
     # INITIAL_WAIT_TIME = 5.0
 
     DEFAULT_TESTS_WIND = [
@@ -60,7 +60,7 @@ class Benchmark:
                 start_time = time.time()
 
                 if not paddle.check_if_in_range(self.ball.get_position()):
-                    print("Benchmark failed, ball_id out of range!")
+                    print("Benchmark failed, ball out of range!")
                     benchmark_failed = True
 
                 paddle.read_and_update_joint_position()

@@ -15,7 +15,7 @@ from typing import List
 
 
 class Benchmark:
-    # Time it takes for ball_id to stabilize.
+    # Time it takes for ball to stabilize.
     INITIAL_WAIT_TIME = 5.0
 
     DEFAULT_TESTS_WIND = [
@@ -72,7 +72,7 @@ class Benchmark:
         while True:
             start_time = time.time()
             if not paddle.check_if_in_range(self.ball.get_position()):
-                print("Benchmark failed, ball_id out of range!")
+                print("Benchmark failed, ball out of range!")
                 print(
                     "Average error (x, y, z): "
                     + str(tuple(average_error[i] / frame for i in range(3)))

@@ -5,14 +5,14 @@ from position_prediction.benchmark import Benchmark
 import pybullet as p
 
 from ball.delayed_pybullet_ball import DelayedPybulletBall
-from position_prediction.polynomial_interpolation import PolynomialPredicter
+from position_prediction.DES import DESPredicter
 from trackers.concurrent_ball_tracker import ConcurrentPredictingBallTracker
 from utils.environment import init_env_and_load_assets
 
 parser = argparse.ArgumentParser()
 DEFAULT_FILE_NAME = "polynomial_prediction_benchmark"
-DEFAULT_N_PREDICT = 10
-DEFAULT_FETCH_TIME = 1 / 20  # 20 is the maximum number of camera outputs per second.
+DEFAULT_N_PREDICT = 5
+DEFAULT_FETCH_TIME = 1 / 30  # 20 is the maximum number of camera outputs per second.
 
 parser.add_argument("--file_name", default=DEFAULT_FILE_NAME, type=str)
 parser.add_argument(
@@ -41,7 +41,9 @@ FETCH_TIME = args.f
 
 paddle.create_joint_controllers()
 
-predicter = PolynomialPredicter(N_PREDICT)
+good_fetch_time = FETCH_TIME/3
+
+predicter = DESPredicter(1, good_fetch_time)
 tracker = ConcurrentPredictingBallTracker(
     DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, FETCH_TIME
 )

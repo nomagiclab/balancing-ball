@@ -47,12 +47,11 @@ if pid_flag:
 
 predicter = PhysicalPredictier(ball, paddle)
 
+PYBULLET_TIME_STEP = 0.01
+p.setTimeStep(PYBULLET_TIME_STEP)
 
-p.setTimeStep(0.01)
 
-
-for _ in range(1000):
-
+while True:
     start_time = time.time()
     if not paddle.check_if_in_range(ball.get_position()):
         break
@@ -81,13 +80,10 @@ for _ in range(1000):
 
     p.stepSimulation()
 
-    # TODO ten sleep powinien być długości częstotliwości symulacji.
     # stepSimulation will perform all the actions in a single forward dynamics
     # simulation step such as collision detection, constraint solving and integration.
     # The default timestep is 1/240 second, it can be changed using the setTimeStep or setPhysicsEngineParameter API.
-    time.sleep(max(0, 0.01 - (time.time() - start_time)))
+    time.sleep(max(0.0, PYBULLET_TIME_STEP - (time.time() - start_time)))
     # sometimes pybullet crashes, this line helps a lot
 
     # [597.7266677411063, -916.5698238987555, 3459.2698871845996]
-
-predicter.debug_plot()

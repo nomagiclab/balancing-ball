@@ -3,6 +3,7 @@ from typing import Tuple, Dict
 import pybullet
 import pybullet_data
 
+from ball.abc_ball import BALL_RADIUS
 from ball.pybullet_ball import PyBulletBall
 from ball.pybullet_ball_controller import PyBulletBallController
 from pid.pid_controller import PIDController
@@ -38,11 +39,13 @@ def init_force_controllers(p):
     return b, force_x_controller, force_y_controller
 
 
-def apply_force(p: pybullet, ball, force_x_controller, force_y_controller):
-    force_x = p.readUserDebugParameter(force_x_controller)
-    force_y = p.readUserDebugParameter(force_y_controller)
+def apply_force(p: pybullet, ball_id, force_x, force_y):
     p.applyExternalForce(
-        ball, -1, [force_x, force_y, 0], [0.2, 0.2, 0.2], p.WORLD_FRAME
+        ball_id,
+        -1,
+        [force_x, force_y, 0],
+        [BALL_RADIUS, BALL_RADIUS, BALL_RADIUS],
+        p.WORLD_FRAME,
     )
 
 
@@ -61,7 +64,9 @@ def update_force_controllers(
     p, ball: PyBulletBall, button: Button, force_x_controller, force_y_controller
 ):
     if button.was_clicked():
-        apply_force(p, ball.id, force_x_controller, force_y_controller)
+        force_x = p.readUserDebugParameter(force_x_controller)
+        force_y = p.readUserDebugParameter(force_y_controller)
+        apply_force(p, ball.id, force_x, force_y)
 
 
 def load_plane(p):
@@ -94,11 +99,16 @@ def load_paddle(p):
 
 
 def init_standard_pid_tools(
-    p: pybullet, max_angle: float, min_angle: float
+    p: pybullet,
+    max_angle: float,
+    min_angle: float,
+    default_kp=100,
+    default_ki=1,
+    default_kd=300,
 ) -> Tuple[Dict[str, float], Button, PIDController]:
-    kp_slider = p.addUserDebugParameter("P", 0, 500, 100)
-    ki_slider = p.addUserDebugParameter("I", 0, 50, 1)
-    kd_slider = p.addUserDebugParameter("D", 0, 6000, 300)
+    kp_slider = p.addUserDebugParameter("P", 0, 500, default_kp)
+    ki_slider = p.addUserDebugParameter("I", 0, 50, default_ki)
+    kd_slider = p.addUserDebugParameter("D", 0, 6000, default_kd)
 
     set_pid_button = Button(p.addUserDebugParameter("Change PID", 1, 0, 0))
 

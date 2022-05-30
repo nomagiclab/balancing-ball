@@ -45,13 +45,13 @@ class Benchmark:
         self.ball = ball
         self.TESTS_WIND = TESTS_WIND
 
-        # if csv_file_name is None:
-        #     csv_file_name = "benchmark" + date.today().strftime("%b-%d-%Y") + ".csv"
-        #
-        # self.csv_file_name = csv_file_name
-        # self.csv_file = open(self.csv_file_name, "w")
-        # self.csv_writer = csv.writer(self.csv_file)
-        # self.csv_writer.writerow(["Frame", "X", "Y", "Z", "X_pred", "Y_pred", "Z_pred"])
+        if csv_file_name is None:
+            csv_file_name = "benchmark" + date.today().strftime("%b-%d-%Y") + ".csv"
+        
+        self.csv_file_name = csv_file_name
+        self.csv_file = open(self.csv_file_name, "w")
+        self.csv_writer = csv.writer(self.csv_file)
+        self.csv_writer.writerow(["Frame", "X", "Y", "Z", "X_pred", "Y_pred", "Z_pred"])
 
     def run_benchmark(
         self, pybullet_client: pybullet, paddle: Paddle, wind_period_length=5.0
@@ -67,7 +67,7 @@ class Benchmark:
         time_left = self.INITIAL_WAIT_TIME
         last_time = time.time()
 
-        PYBULLET_TIME_STEP = 1 / 240
+        PYBULLET_TIME_STEP = 1 / 100 
 
         while True:
             start_time = time.time()

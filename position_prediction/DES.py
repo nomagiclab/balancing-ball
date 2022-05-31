@@ -14,14 +14,12 @@ https://www.researchgate.net/publication/334980885_Prediction_of_a_Ball_Trajecto
 https://en.wikipedia.org/wiki/Exponential_smoothing
 """
 class DESPredicter(ABCPredicter):
-    def __init__(self, delay, good_fetch_time, alpha=0.5, gamma=0.001):
+    def __init__(self, step_num, alpha=0.8, gamma=0.4):
         self.alpha = alpha
         self.gamma = gamma
         self.S = [None, None, None]
         self.B = [None, None, None]
-        self.delay = delay
-        self.good_fetch_time = good_fetch_time
-        self.own_timer = time.time()
+        self.step_num = step_num
 
     def recalculate_S_and_B(self, index, last_pos, a, g):
         if self.S[index] is None:
@@ -38,16 +36,10 @@ class DESPredicter(ABCPredicter):
 
     def add_position(self, position: List[float]):
         for index, pos in enumerate(position):
-                self.recalculate_S_and_B(index, pos, 1, self.gamma)
-        self.own_timer = time.time()
+                self.recalculate_S_and_B(index, pos, self.alpha, self.gamma)
 
     def next_position(self) -> List[float]:
         predicted = [self.predict(i) for i in range(3)]
-        if time.time() - self.own_timer >= self.good_fetch_time:
-                for index, pos in enumerate(predicted):
-                        self.recalculate_S_and_B(index, pos, self.alpha, self.gamma)
-                self.own_timer = time.time()
-        print(self.S, self.B)
         return predicted
 
     def predict(self, index) -> float:
@@ -57,4 +49,4 @@ class DESPredicter(ABCPredicter):
                 raise RuntimeError('Predicting without initial position') from None
         if last_B is None:
                 return last_S
-        return last_S + self.delay*last_B
+        return last_S + self.step_num*last_B

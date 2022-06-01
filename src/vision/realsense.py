@@ -11,7 +11,7 @@ from src.segmentation.segmentation import (
     ORANGE_MIN,
     ORANGE_MAX,
     DEFAULT_BLUR_KERNEL,
-    bitmask_average_from_img,
+    bitmask_average_from_img, blurred_thresholding,
 )
 
 
@@ -48,6 +48,7 @@ class UsbRealsenseCamera(AbstractCameraService):
         self.profile = self.pipe.start(self.cfg)
 
         self.center_point = center_point
+        self.pixel_scale = 1
 
         self.__gui = gui
         self.init_gui()
@@ -85,6 +86,50 @@ class UsbRealsenseCamera(AbstractCameraService):
         color, depth = self.raw_photo(colorized_depth=False)
         return color, depth, None
 
+    def measure_paddle(self, find_center=False):
+        MIN_RED = np.array([155, 25, 0], np.uint8)
+        MAX_RED = np.array([179, 255, 255], np.uint8)
+        REAL_PADDLE_RADIUS = 0.085
+
+        while True:
+            rgb, _, _ = self.take_photo()
+            image = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+
+            ths = blurred_thresholding(
+                rgb,
+                blur_kernel=DEFAULT_BLUR_KERNEL,
+                COLOR_MIN=MIN_RED,
+                COLOR_MAX=MAX_RED
+            )
+
+            contours, hierarchy = cv2.findContours(ths, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            try:
+                contour = sorted(contours, key=cv2.contourArea, reverse=True)[0]
+            except:
+                continue
+
+            (x, y), radius = cv2.minEnclosingCircle(contour)
+
+            cv2.circle(
+                image,
+                (int(x), int(y)),
+                int(radius),
+                (0, 0, 0),
+                cv2.LINE_4
+            )
+            cv2.imshow("Paddle measure", image)
+            if cv2.waitKey(10) == 32:
+                print("Is this your final decision?")
+                if cv2.waitKey(0) == 32:
+                    print("MEASURED")
+                    break
+                else:
+                    print("OKAY THEN")
+
+        self.pixel_scale = REAL_PADDLE_RADIUS / radius
+        if find_center:
+            self.center_point = (int(x), int(y))
+
     def object_position(self) -> Optional[Tuple[float, float]]:
         rgb, _, _ = self.take_photo()
 
@@ -111,11 +156,13 @@ class UsbRealsenseCamera(AbstractCameraService):
                 cv2.FILLED,
             )
             cv2.imshow(self.__gui_window_name, image)
+            cv2.waitKey(1)
 
         if position is None:
             return None
 
-        return position[0] - self.center_point[0], position[1] - self.center_point[1]
+        return self.pixel_scale * (position[0] - self.center_point[0]), \
+               self.pixel_scale * (position[1] - self.center_point[1])
 
     def gui_wait_key(self):
         if self.__gui:

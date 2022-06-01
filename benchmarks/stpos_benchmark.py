@@ -15,12 +15,9 @@ BALL_RADIUS = 0.03
 
 
 class StPosBenchmark:
-    DEFAULT_POSES = [
-        (0.07, 0, BALL_RADIUS),
-        (0, 0.05, BALL_RADIUS),
-        (-0.07, 0.05, BALL_RADIUS),
-        (0.035, -0.06, BALL_RADIUS),
-    ]
+    DEFAULT_POSE = [0.07, 0]
+
+    INITIAL_WAIT_TIME = 2
 
     PYBULLET_TIME_STEP = 1 / 100
 
@@ -28,14 +25,15 @@ class StPosBenchmark:
         self,
         tracker: AbstractBallTracker,
         ball: PyBulletBall,
-        pose_tests: List[Tuple[float, float]] = None,
+        pose_test: Tuple[float, float] = None,
     ):
-        if pose_tests is None:
-            pose_tests = StPosBenchmark.DEFAULT_POSES
+        if pose_test is None:
+            pose_test = StPosBenchmark.DEFAULT_POSE
+        pose_test.append(BALL_RADIUS)
 
         self.tracker = tracker
         self.ball = ball
-        self.pose_tests = pose_tests
+        self.pose_test = pose_test
         self.plotter = PlotMaker(["Error on x axis", "Error on y axis"])
 
     def _perform_test(self, pybullet_client, paddle, pid_performer, test_time_period):
@@ -62,6 +60,13 @@ class StPosBenchmark:
 
         return True
 
+    def run_idle_simulation(self, pybullet_client, wait_time: float):
+        start_time = time.time()
+        while time.time() - start_time < wait_time:
+            loop_time = time.time()
+            pybullet_client.stepSimulation()
+            time.sleep(max(self.PYBULLET_TIME_STEP - (time.time() - loop_time), 0))
+
     def run_benchmark(
         self,
         pybullet_client: pybullet,
@@ -74,22 +79,22 @@ class StPosBenchmark:
 
         pybullet_client.setTimeStep(self.PYBULLET_TIME_STEP)
 
-        self.pose_tests.insert(0, (0.0, 0.0, 1.0))
+        pid_performer = PidPerformer(
+            pybullet_client, self.tracker, paddle, *pid_parameters
+        )
 
-        for p_test in self.pose_tests:
-            pid_performer = PidPerformer(
-                pybullet_client, self.tracker, paddle, *pid_parameters
-            )
-            self.ball.set_position(
-                [x + y for x, y in zip(p_test, paddle.get_center_position())],
-                pybullet_ball.DEFAULT_ORIENTATION,
-            )
+        paddle.read_and_update_joint_position()
+        self.run_idle_simulation(pybullet_client, self.INITIAL_WAIT_TIME)
 
-            if self._perform_test(
-                pybullet_client, paddle, pid_performer, test_time_period
-            ):
-                print("BENCHMARK FAILED")
-                break
+        self.ball.set_position(
+            [x + y for x, y in zip(self.pose_test, paddle.get_center_position())],
+            pybullet_ball.DEFAULT_ORIENTATION,
+        )
+
+        if not self._perform_test(
+            pybullet_client, paddle, pid_performer, test_time_period
+        ):
+            print("BENCHMARK FAILED")
 
     def plot(self):
         self.plotter.plot_subplots(

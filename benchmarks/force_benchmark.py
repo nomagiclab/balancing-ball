@@ -157,7 +157,7 @@ class ForceBenchmark:
         from matplotlib import pyplot as plt
 
         data = pandas.read_csv(csv_file_name)
-        fig, axs = plt.subplots(3)
+        fig, axs = plt.subplots(3, constrained_layout = True)
         fig.suptitle("Prediction errors")
 
         axs[0].set_title("Error on x axis")

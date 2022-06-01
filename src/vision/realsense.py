@@ -11,7 +11,8 @@ from src.segmentation.segmentation import (
     ORANGE_MIN,
     ORANGE_MAX,
     DEFAULT_BLUR_KERNEL,
-    bitmask_average_from_img, blurred_thresholding,
+    bitmask_average_from_img,
+    blurred_thresholding,
 )
 
 
@@ -99,10 +100,12 @@ class UsbRealsenseCamera(AbstractCameraService):
                 rgb,
                 blur_kernel=DEFAULT_BLUR_KERNEL,
                 COLOR_MIN=MIN_RED,
-                COLOR_MAX=MAX_RED
+                COLOR_MAX=MAX_RED,
             )
 
-            contours, hierarchy = cv2.findContours(ths, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            contours, hierarchy = cv2.findContours(
+                ths, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE
+            )
             try:
                 contour = sorted(contours, key=cv2.contourArea, reverse=True)[0]
             except:
@@ -110,13 +113,7 @@ class UsbRealsenseCamera(AbstractCameraService):
 
             (x, y), radius = cv2.minEnclosingCircle(contour)
 
-            cv2.circle(
-                image,
-                (int(x), int(y)),
-                int(radius),
-                (0, 0, 0),
-                cv2.LINE_4
-            )
+            cv2.circle(image, (int(x), int(y)), int(radius), (0, 0, 0), cv2.LINE_4)
             cv2.imshow("Paddle measure", image)
             if cv2.waitKey(10) == 32:
                 print("Is this your final decision?")
@@ -161,8 +158,9 @@ class UsbRealsenseCamera(AbstractCameraService):
         if position is None:
             return None
 
-        return self.pixel_scale * (position[0] - self.center_point[0]), \
-               self.pixel_scale * (position[1] - self.center_point[1])
+        return self.pixel_scale * (
+            position[0] - self.center_point[0]
+        ), self.pixel_scale * (position[1] - self.center_point[1])
 
     def gui_wait_key(self):
         if self.__gui:

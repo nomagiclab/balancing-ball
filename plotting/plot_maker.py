@@ -31,7 +31,6 @@ class PlotMaker:
         fig, axs = plt.subplots(n_subplots)
         if title is not None:
             fig.suptitle(title)
-        plt.tight_layout()
         for i in range(n_subplots):
             if titles is not None:
                 axs[i].set_title(titles[i])

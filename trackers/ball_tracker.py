@@ -12,6 +12,7 @@ class BallTracker(AbstractBallTracker):
     def __init__(self, ball: ABCBall, paddle: Paddle):
         self.ball = ball
         self.paddle = paddle
+        self.last_predicted_pos = [0, 0, 0]
 
     def get_error_vector(self) -> List[float]:
         ball_pos = self.ball.get_position()

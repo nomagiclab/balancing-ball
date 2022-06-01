@@ -24,8 +24,15 @@ def blurred_thresholding(
     COLOR_MIN: np.ndarray = ORANGE_MIN,
     COLOR_MAX: np.ndarray = ORANGE_MAX,
 ) -> np.ndarray:
-    blurred_img = cv.blur(img, blur_kernel)
+    blurred_img = blur_img(img, blur_kernel=blur_kernel)
     return raw_thesholding(blurred_img, COLOR_MIN=COLOR_MIN, COLOR_MAX=COLOR_MAX)
+
+
+def blur_img(
+    img: np.ndarray,
+    blur_kernel: Tuple[int, int] = DEFAULT_BLUR_KERNEL,
+) -> np.ndarray:
+    return cv.blur(img, blur_kernel)
 
 
 """

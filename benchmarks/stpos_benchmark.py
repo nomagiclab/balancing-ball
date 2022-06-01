@@ -1,29 +1,25 @@
 import time
+from typing import List, Tuple
 
 import pybullet
 
+import ball.pybullet_ball as pybullet_ball
 from ball.pybullet_ball import PyBulletBall
 from paddle.paddle import Paddle
 from plotting.plot_maker import PlotMaker
 from trackers.abstract_tracker import AbstractBallTracker, OutOfRange
 from trackers.ball_tracker import BallTracker
-from utils.environment import set_wind
 from utils.pid_performer import PidPerformer
 
+BALL_RADIUS = 0.03
 
-class WindBenchmark:
-    # Time it takes for ball to stabilize.
-    # INITIAL_WAIT_TIME = 5.0
 
-    DEFAULT_TESTS_WIND = [
-        (-1.5, 0.0),
-        (1.5, 0.0),
-        (0.0, 1.5),
-        (0.0, -1.5),
-        (0.9, 0.9),
-        (-0.9, 0.9),
-        (-0.9, -0.9),
-        (0.9, -0.9),
+class StPosBenchmark:
+    DEFAULT_POSES = [
+        (0.07, 0, BALL_RADIUS),
+        (0, 0.05, BALL_RADIUS),
+        (-0.07, 0.05, BALL_RADIUS),
+        (0.035, -0.06, BALL_RADIUS),
     ]
 
     PYBULLET_TIME_STEP = 1 / 100
@@ -32,13 +28,14 @@ class WindBenchmark:
         self,
         tracker: AbstractBallTracker,
         ball: PyBulletBall,
-        tests_wind=None,
+        pose_tests: List[Tuple[float, float]] = None,
     ):
-        if tests_wind is None:
-            tests_wind = self.DEFAULT_TESTS_WIND
+        if pose_tests is None:
+            pose_tests = StPosBenchmark.DEFAULT_POSES
+
         self.tracker = tracker
         self.ball = ball
-        self.tests_wind = tests_wind
+        self.pose_tests = pose_tests
         self.plotter = PlotMaker(["Error on x axis", "Error on y axis"])
 
     def _perform_test(self, pybullet_client, paddle, pid_performer, test_time_period):
@@ -67,7 +64,7 @@ class WindBenchmark:
         self,
         pybullet_client: pybullet,
         paddle: Paddle,
-        wind_period_length=5.0,
+        test_time_period=5.0,
         pid_parameters=None,
     ):
         if pid_parameters is None:
@@ -75,17 +72,19 @@ class WindBenchmark:
 
         pybullet_client.setTimeStep(self.PYBULLET_TIME_STEP)
 
-        pid_performer = PidPerformer(
-            pybullet_client, self.tracker, paddle, *pid_parameters
-        )
+        self.pose_tests.insert(0, (0.0, 0.0, 1.0))
 
-        self.tests_wind.insert(0, (0, 0))
-
-        for test_wind in self.tests_wind:
-            set_wind(pybullet_client, *test_wind)
+        for p_test in self.pose_tests:
+            pid_performer = PidPerformer(
+                pybullet_client, self.tracker, paddle, *pid_parameters
+            )
+            self.ball.set_position(
+                [x + y for x, y in zip(p_test, paddle.get_center_position())],
+                pybullet_ball.DEFAULT_ORIENTATION,
+            )
 
             if self._perform_test(
-                pybullet_client, paddle, pid_performer, wind_period_length
+                pybullet_client, paddle, pid_performer, test_time_period
             ):
                 print("BENCHMARK FAILED")
                 break

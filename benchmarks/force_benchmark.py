@@ -159,20 +159,22 @@ class ForceBenchmark:
         data = pandas.read_csv(csv_file_name)
         fig, axs = plt.subplots(3)
         fig.suptitle("Prediction errors")
-        fig.tight_layout()
 
-        axs[0].set_title("Error x")
+        axs[0].set_title("Error on x axis")
+        axs[0].set_ylabel("error [cm]")
         axs[0].plot(
             data["Frame"], abs(data["X_pred"] - data["X"]), label="X", color="red"
         )
-        axs[1].set_title("Error y")
+        axs[1].set_title("Error on y axis")
+        axs[1].set_ylabel("error [cm]")
         axs[1].plot(
             data["Frame"], abs(data["Y_pred"] - data["Y"]), label="Y", color="green"
         )
-        axs[2].set_title("Squared error (x^2 + y^2)")
+        axs[2].set_title("Distance (sqrt(x^2 + y^2))")
+        axs[2].set_ylabel("error [cm]")
         axs[2].plot(
             data["Frame"],
-            abs(data["Y_pred"] - data["Y"]) ** 2 + abs(data["X_pred"] - data["X"]) ** 2,
+            ((data["Y_pred"] - data["Y"]) ** 2 + (data["X_pred"] - data["X"]) ** 2)**(0.5),
             label="error",
             color="blue",
         )

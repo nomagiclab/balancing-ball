@@ -63,6 +63,8 @@ class WindBenchmark:
             time.sleep(max(self.PYBULLET_TIME_STEP - (time.time() - start_time), 0))
             time_left -= time.time() - start_time
 
+        return True
+
     def run_benchmark(
         self,
         pybullet_client: pybullet,

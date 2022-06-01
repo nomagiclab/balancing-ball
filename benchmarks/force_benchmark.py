@@ -126,7 +126,7 @@ class ForceBenchmark:
             [["Error on x axis"], ["Error on y axis"]],
             "Ball positions",
             ["Error on x axis", "Error on y axis"],
-            ["error [cm]", "error [cm]"],
+            ["error [m]", "error [m]"],
         )
 
     def get_prediction_error(self, plot_file_name):
@@ -156,17 +156,17 @@ class ForceBenchmark:
         fig.suptitle("Prediction errors")
 
         axs[0].set_title("Error on x axis")
-        axs[0].set_ylabel("error [cm]")
+        axs[0].set_ylabel("error [m]")
         axs[0].plot(
             data["Frame"], abs(data["X_pred"] - data["X"]), label="X", color="red"
         )
         axs[1].set_title("Error on y axis")
-        axs[1].set_ylabel("error [cm]")
+        axs[1].set_ylabel("error [m]")
         axs[1].plot(
             data["Frame"], abs(data["Y_pred"] - data["Y"]), label="Y", color="green"
         )
         axs[2].set_title("Distance (sqrt(x^2 + y^2))")
-        axs[2].set_ylabel("error [cm]")
+        axs[2].set_ylabel("error [m]")
         axs[2].plot(
             data["Frame"],
             ((data["Y_pred"] - data["Y"]) ** 2 + (data["X_pred"] - data["X"]) ** 2)

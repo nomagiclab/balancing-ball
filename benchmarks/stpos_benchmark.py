@@ -101,4 +101,5 @@ class StPosBenchmark:
             [["Error on x axis"], ["Error on y axis"]],
             "Ball positions",
             ["Error on x axis", "Error on y axis"],
+            ["error [m]", "error [m]"],
         )

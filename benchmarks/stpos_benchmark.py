@@ -67,7 +67,6 @@ class StPosBenchmark:
             pybullet_client.stepSimulation()
             time.sleep(max(self.PYBULLET_TIME_STEP - (time.time() - loop_time), 0))
 
-
     def run_benchmark(
         self,
         pybullet_client: pybullet,
@@ -96,7 +95,6 @@ class StPosBenchmark:
             pybullet_client, paddle, pid_performer, test_time_period
         ):
             print("BENCHMARK FAILED")
-
 
     def plot(self):
         self.plotter.plot_subplots(

@@ -29,7 +29,7 @@ parser.add_argument(
     "-f", type=float, help="FETCH_TIME parameter", default=DEFAULT_FETCH_TIME
 )
 parser.add_argument(
-    "--no-prediction", help="USE no_prediciton predicter", action='store_true'
+    "--no-prediction", help="USE no_prediciton predicter", action="store_true"
 )
 parser.add_argument("--delete", action="store_true")
 args = parser.parse_args()

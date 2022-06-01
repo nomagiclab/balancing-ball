@@ -37,7 +37,7 @@ class ForceBenchmark:
         tracker: AbstractBallTracker,
         ball: PyBulletBall,
         tests_forces=None,
-        csv_file_name: str = None
+        csv_file_name: str = None,
     ):
         if tests_forces is None:
             tests_forces = self.DEFAULT_FORCES
@@ -55,7 +55,6 @@ class ForceBenchmark:
         self.average_error = (0, 0, 0)
         self.frame = 0
 
-
     def _write_info(self):
         predicted_pos = self.tracker.last_predicted_pos
 
@@ -70,7 +69,6 @@ class ForceBenchmark:
             )
 
         self.frame += 1
-
 
     def run_benchmark(
         self,
@@ -137,19 +135,16 @@ class ForceBenchmark:
     @staticmethod
     def plot_error(csv_file_name: str, plot_filename: str):
         from matplotlib import pyplot as plt
+
         data = pandas.read_csv(csv_file_name)
         fig, axs = plt.subplots(2)
         fig.suptitle("Ball positions")
         fig.tight_layout()
 
         axs[0].set_title("Error on x axis")
-        axs[0].plot(
-            data["Frame"], data["X"], label="X", color="red"
-        )
+        axs[0].plot(data["Frame"], data["X"], label="X", color="red")
         axs[1].set_title("Error on y axis")
-        axs[1].plot(
-            data["Frame"], data["Y"], label="Y", color="green"
-        )
+        axs[1].plot(data["Frame"], data["Y"], label="Y", color="green")
         plt.savefig(plot_filename)
 
     @staticmethod
@@ -157,7 +152,7 @@ class ForceBenchmark:
         from matplotlib import pyplot as plt
 
         data = pandas.read_csv(csv_file_name)
-        fig, axs = plt.subplots(3, constrained_layout = True)
+        fig, axs = plt.subplots(3, constrained_layout=True)
         fig.suptitle("Prediction errors")
 
         axs[0].set_title("Error on x axis")
@@ -174,7 +169,8 @@ class ForceBenchmark:
         axs[2].set_ylabel("error [cm]")
         axs[2].plot(
             data["Frame"],
-            ((data["Y_pred"] - data["Y"]) ** 2 + (data["X_pred"] - data["X"]) ** 2)**(0.5),
+            ((data["Y_pred"] - data["Y"]) ** 2 + (data["X_pred"] - data["X"]) ** 2)
+            ** (0.5),
             label="error",
             color="blue",
         )

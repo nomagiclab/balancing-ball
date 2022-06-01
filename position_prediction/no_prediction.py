@@ -2,6 +2,7 @@ from typing import List
 
 from position_prediction.abc_predicter import ABCPredicter
 
+
 class NoPredictionPredicter(ABCPredicter):
     def __init__(self):
         pass

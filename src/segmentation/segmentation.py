@@ -27,11 +27,13 @@ def blurred_thresholding(
     blurred_img = blur_img(img, blur_kernel=blur_kernel)
     return raw_thesholding(blurred_img, COLOR_MIN=COLOR_MIN, COLOR_MAX=COLOR_MAX)
 
+
 def blur_img(
     img: np.ndarray,
     blur_kernel: Tuple[int, int] = DEFAULT_BLUR_KERNEL,
 ) -> np.ndarray:
     return cv.blur(img, blur_kernel)
+
 
 """
 Returns result of color thersholding on img.

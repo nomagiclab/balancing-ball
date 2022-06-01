@@ -40,12 +40,12 @@ class Benchmark:
     ]
 
     def __init__(
-            self,
-            tracker: AbstractBallTracker,
-            ball: PyBulletBall,
-            csv_file_name: str = None,
-            TESTS_WIND=None,
-            FORCE_TESTS=None
+        self,
+        tracker: AbstractBallTracker,
+        ball: PyBulletBall,
+        csv_file_name: str = None,
+        TESTS_WIND=None,
+        FORCE_TESTS=None,
     ):
         if TESTS_WIND is None:
             TESTS_WIND = self.DEFAULT_TESTS_WIND
@@ -100,7 +100,9 @@ class Benchmark:
         self._reset_test_data()
 
         for test in self.force_tests:
-            self.ball.set_position(self.DEFAULT_BALL_POSITION, pybullet_ball.DEFAULT_ORIENTATION)
+            self.ball.set_position(
+                self.DEFAULT_BALL_POSITION, pybullet_ball.DEFAULT_ORIENTATION
+            )
             start_time = time.time()
             while time.time() - start_time < self.INITIAL_WAIT_TIME / 2:
                 self._write_info()
@@ -120,7 +122,7 @@ class Benchmark:
                 _perform_sim_step(p, paddle, pid_performer)
 
     def run_benchmark(
-            self, pybullet_client: pybullet, paddle: Paddle, wind_period_length=5.0
+        self, pybullet_client: pybullet, paddle: Paddle, wind_period_length=5.0
     ):
         pid_performer = PidPerformer(pybullet_client, self.tracker, paddle)
 
@@ -162,19 +164,16 @@ class Benchmark:
     @staticmethod
     def plot_error(csv_file_name: str, plot_filename: str):
         from matplotlib import pyplot as plt
+
         data = pandas.read_csv(csv_file_name)
         fig, axs = plt.subplots(2)
         fig.suptitle("Ball positions")
         fig.tight_layout()
 
         axs[0].set_title("Error on x axis")
-        axs[0].plot(
-            data["Frame"], data["X"], label="X", color="red"
-        )
+        axs[0].plot(data["Frame"], data["X"], label="X", color="red")
         axs[1].set_title("Error on y axis")
-        axs[1].plot(
-            data["Frame"], data["Y"], label="Y", color="green"
-        )
+        axs[1].plot(data["Frame"], data["Y"], label="Y", color="green")
         plt.savefig(plot_filename)
 
     @staticmethod

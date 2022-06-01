@@ -10,7 +10,7 @@ from utils.environment import set_wind
 from utils.pid_performer import PidPerformer
 
 
-class Benchmark:
+class WindBenchmark:
     # Time it takes for ball to stabilize.
     # INITIAL_WAIT_TIME = 5.0
 

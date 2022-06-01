@@ -7,6 +7,7 @@ from ball.delayed_pybullet_ball import DelayedPybulletBall
 from position_prediction.DES import DESPredicter
 from benchmarks.force_benchmark import ForceBenchmark
 from position_prediction.polynomial_interpolation import PolynomialPredicter
+from position_prediction.no_prediction import NoPredictionPredicter
 from trackers.ball_tracker import BallTracker
 from trackers.concurrent_ball_tracker import ConcurrentPredictingBallTracker
 from utils.environment import init_env_and_load_assets
@@ -48,13 +49,14 @@ NO_PREDICTION = args.no_prediction
 
 paddle.create_joint_controllers()
 
-predicter = DESPredicter(1)
+if NO_PREDICTION:
+    predicter = NoPredictionPredicter()
+else:
+    predicter = DESPredicter(1)
 
 tracker = ConcurrentPredictingBallTracker(
     DelayedPybulletBall(ball, N_DELAYED), paddle, predicter, FETCH_TIME
 )
-
-#tracker = BallTracker(ball, paddle)
 
 file_name = args.file_name
 csv_name = file_name + ".csv"

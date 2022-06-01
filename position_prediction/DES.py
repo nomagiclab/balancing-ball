@@ -1,11 +1,6 @@
 from collections import deque
 from typing import Tuple, List
 
-from scipy import interpolate
-import numpy as np
-
-import time
-
 from position_prediction.abc_predicter import ABCPredicter
 
 """

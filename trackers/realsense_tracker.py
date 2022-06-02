@@ -16,5 +16,6 @@ class RealsenseTracker(AbstractBallTracker):
                 raise OutOfRange
 
             return return_on_lost
+        V = [x / y for x,y in zip(res, [0.085, 0.07])]
 
-        return [x for x in res]
+        return V

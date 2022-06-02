@@ -11,19 +11,20 @@ IP_ADDRESS = "192.168.1.20"
 
 paddle = robot_paddle.RobotPaddle(IP_ADDRESS)
 
-P = 0.066
-I = 0.002
-D = 0.03
+P = 0.66 * 20
+I = 0.02 * 10
+D = 0.3 * 10
 
 tracker = RealsenseTracker((200, 296), True)
 
-pid_controller = PIDController(P, I, D, 17, -17)
+pid_controller = PIDController(P, I, D, 13, -13)
 csv_writer_x = CsvWriter("x")
 csv_writer_y = CsvWriter("y")
 
 pid_balancer = PIDBalancer(tracker, pid_controller)
 
 print(csv_writer_x.file_name, " ", csv_writer_y.file_name)
+tracker.camera.measure_paddle(True)
 input("All set?")
 
 while True:

@@ -5,6 +5,6 @@ tracker.camera.measure_paddle(True)
 
 while True:
     try:
-        tracker.get_error_vector()
+        print("ERROR: ", tracker.get_error_vector())
     except:
         print("OUT OF RANGE")

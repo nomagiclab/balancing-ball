@@ -41,7 +41,9 @@ class WindBenchmark:
         self.tests_wind = tests_wind
         self.plotter = PlotMaker(["Error on x axis", "Error on y axis"])
 
-    def _perform_test(self, pybullet_client, paddle, pid_performer, test_time_period):
+    def _perform_test(
+        self, pybullet_client, paddle, pid_performer, test_time_period, initial_time
+    ):
         real_tracker = BallTracker(self.ball, paddle)
         time_left = test_time_period
 
@@ -50,7 +52,7 @@ class WindBenchmark:
             paddle.read_and_update_joint_position()
             pid_performer.perform_pid_step()
 
-            t = time.time()
+            t = (time.time() - initial_time) * 1000
 
             try:
                 error = real_tracker.get_error_vector()
@@ -83,11 +85,12 @@ class WindBenchmark:
 
         self.tests_wind.insert(0, (0, 0))
 
+        initial_time = time.time()
         for test_wind in self.tests_wind:
             set_wind(pybullet_client, *test_wind)
 
             if self._perform_test(
-                pybullet_client, paddle, pid_performer, wind_period_length
+                pybullet_client, paddle, pid_performer, wind_period_length, initial_time
             ):
                 print("BENCHMARK FAILED")
                 break

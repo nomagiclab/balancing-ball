@@ -36,7 +36,9 @@ class StPosBenchmark:
         self.pose_test = pose_test
         self.plotter = PlotMaker(["Error on x axis", "Error on y axis"])
 
-    def _perform_test(self, pybullet_client, paddle, pid_performer, test_time_period):
+    def _perform_test(
+        self, pybullet_client, paddle, pid_performer, test_time_period, initial_time
+    ):
         real_tracker = BallTracker(self.ball, paddle)
         time_left = test_time_period
 
@@ -45,7 +47,7 @@ class StPosBenchmark:
             paddle.read_and_update_joint_position()
             pid_performer.perform_pid_step()
 
-            t = time.time()
+            t = (time.time() - initial_time) * 1000
 
             try:
                 error = real_tracker.get_error_vector()
@@ -92,7 +94,7 @@ class StPosBenchmark:
         )
 
         if not self._perform_test(
-            pybullet_client, paddle, pid_performer, test_time_period
+            pybullet_client, paddle, pid_performer, test_time_period, time.time()
         ):
             print("BENCHMARK FAILED")
 
